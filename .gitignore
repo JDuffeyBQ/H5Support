@@ -1,0 +1,9 @@
+/Build/
+/Build-ninja/
+/Build-Xcode/
+.project
+/x64/
+.settings
+.ctags
+.vscode
+/ExternalProjects
