@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS False)
 
-project(H5Support LANGUAGES C CXX VERSION 0.1.0.0)
+project(H5Support LANGUAGES C CXX VERSION 1.0.0.0)
 
 # ---------- Setup output Directories -------------------------
 if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
@@ -12,7 +12,7 @@ if(NOT DEFINED CMAKE_LIBRARY_OUTPUT_DIRECTORY)
     ${H5Support_BINARY_DIR}/Bin
     CACHE PATH
     "Single Directory for all Libraries"
-    )
+  )
 endif()
 
 # --------- Setup the Executable output Directory -------------
@@ -21,7 +21,7 @@ if(NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
     ${H5Support_BINARY_DIR}/Bin
     CACHE PATH
     "Single Directory for all Executables."
-    )
+  )
 endif()
 
 # --------- Setup the Executable output Directory -------------
@@ -30,7 +30,7 @@ if(NOT DEFINED CMAKE_ARCHIVE_OUTPUT_DIRECTORY)
     ${H5Support_BINARY_DIR}/Bin
     CACHE PATH
     "Single Directory for all static libraries."
-    )
+  )
 endif()
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
