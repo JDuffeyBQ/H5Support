@@ -303,4 +303,8 @@ if(H5Support_BUILD_TESTING)
     include(${H5Support_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
-include(${H5Support_SOURCE_DIR}/Resources/CMake/PackageProject.cmake)
+option(H5Support_PACKAGE "Enables packaging for H5Support" ON)
+
+if(H5Support_PACKAGE)
+  include(${H5Support_SOURCE_DIR}/Resources/CMake/PackageProject.cmake)
+endif()
