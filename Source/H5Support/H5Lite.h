@@ -413,6 +413,77 @@ template <typename T> herr_t writePointerDataset(hid_t locationID, const std::st
 }
 
 /**
+ * @brief Replaces the given dataset with the data of a pointer to an HDF5 file. Creates the dataset if it does not exist.
+ * @param locationID The hdf5 object id of the parent
+ * @param datasetName The name of the dataset to write to. This can be a name of Path
+ * @param rank The number of dimensions
+ * @param dims The sizes of each dimension
+ * @param data The data to be written.
+ * @return Standard hdf5 error condition.
+ */
+template <typename T> static herr_t replacePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+{
+  H5SUPPORT_MUTEX_LOCK()
+
+  herr_t error = -1;
+  hid_t datasetID = -1;
+  hid_t dataspaceID = -1;
+  herr_t returnError = 0;
+
+  if(data == nullptr)
+  {
+    return -2;
+  }
+
+  hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
+  if(dataType == -1)
+  {
+    return -1;
+  }
+  // Create the DataSpace
+  dataspaceID = H5Screate_simple(rank, dims, nullptr);
+  if(dataspaceID < 0)
+  {
+    return dataspaceID;
+  }
+
+  HDF_ERROR_HANDLER_OFF
+  datasetID = H5Dopen(locationID, datasetName.c_str(), H5P_DEFAULT);
+  HDF_ERROR_HANDLER_ON
+  if(datasetID < 0) // dataset does not exist so create it
+  {
+    datasetID = H5Dcreate(locationID, datasetName.c_str(), dataType, dataspaceID, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+  }
+  if(datasetID >= 0)
+  {
+    error = H5Dwrite(datasetID, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, data);
+    if(error < 0)
+    {
+      std::cout << "Error Writing Data" << std::endl;
+      returnError = error;
+    }
+    error = H5Dclose(datasetID);
+    if(error < 0)
+    {
+      std::cout << "Error Closing Dataset." << std::endl;
+      returnError = error;
+    }
+  }
+  else
+  {
+    returnError = static_cast<herr_t>(datasetID);
+  }
+  /* Terminate access to the data space. */
+  error = H5Sclose(dataspaceID);
+  if(error < 0)
+  {
+    std::cout << "Error Closing Dataspace" << std::endl;
+    returnError = error;
+  }
+  return returnError;
+}
+
+/**
  * @brief Creates a Dataset with the given name at the location defined by locationID
  *
  *

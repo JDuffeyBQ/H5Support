@@ -388,6 +388,22 @@ herr_t QH5Lite::getAttributeInfo(hid_t locationID, const QString& objectName, co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+hid_t QH5Lite::HDFTypeFromString(const QString& value)
+{
+  return H5Lite::HDFTypeFromString(value.toStdString());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString QH5Lite::StringForHDFType(hid_t type)
+{
+  return QString::fromStdString(H5Lite::StringForHDFType(type));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QVector<hsize_t> QH5Lite::guessChunkSize(const QVector<hsize_t>& dims, size_t typeSize)
 {
   return QVector<hsize_t>::fromStdVector(H5Lite::guessChunkSize(dims.size(), dims.data(), typeSize));

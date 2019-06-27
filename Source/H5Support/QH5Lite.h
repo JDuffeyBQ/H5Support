@@ -97,20 +97,14 @@ H5Support_EXPORT herr_t closeId(hid_t objectID, int32_t objectType);
  * @param value The HDF_Type as a string
  * @return the hid_t value for the given type. -1 if the string does not match a type.
  */
-hid_t HDFTypeFromString(const QString& value)
-{
-  return H5Lite::HDFTypeFromString(value.toStdString());
-}
+H5Support_EXPORT hid_t HDFTypeFromString(const QString& value);
 
 /**
  * @brief Returns a string version of the HDF Type
  * @param type The HDF5 Type to query
  * @return
  */
-QString StringForHDFType(hid_t type)
-{
-  return QString::fromStdString(H5Lite::StringForHDFType(type));
-}
+H5Support_EXPORT QString StringForHDFType(hid_t type);
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
@@ -243,6 +237,20 @@ herr_t writeVectorDatasetCompressed(hid_t locationID, const QString& datasetName
 template <typename T> herr_t writePointerDataset(hid_t locationID, const QString& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   return H5Lite::writePointerDataset(locationID, datasetName.toStdString(), rank, dims, data);
+}
+
+/**
+ * @brief Replaces the given dataset with the data of a pointer to an HDF5 file. Creates the dataset if it does not exist.
+ * @param locationID The hdf5 object id of the parent
+ * @param datasetName The name of the dataset to write to. This can be a name of Path
+ * @param rank The number of dimensions
+ * @param dims The sizes of each dimension
+ * @param data The data to be written.
+ * @return Standard hdf5 error condition.
+ */
+template <typename T> herr_t replacePointerDataset(hid_t locationID, const QString& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+{
+  return H5Lite::replacePointerDataset(locationID, datasetName.toStdString(), rank, dims, data);
 }
 
 /**
