@@ -601,8 +601,8 @@ public:
     error = testReadPointer1DArrayAttribute<uint32_t>(fileID, datasetName);
     error = testReadPointer1DArrayAttribute<int64_t>(fileID, datasetName);
     error = testReadPointer1DArrayAttribute<uint64_t>(fileID, datasetName);
-    error = testReadPointer1DArrayAttribute<float32>(fileID, datasetName);
-    error = testReadPointer1DArrayAttribute<float64>(fileID, datasetName);
+    error = testReadPointer1DArrayAttribute<float>(fileID, datasetName);
+    error = testReadPointer1DArrayAttribute<double>(fileID, datasetName);
 
     error = testReadPointer2DArrayAttribute<int8_t>(fileID, datasetName);
     error = testReadPointer2DArrayAttribute<uint8_t>(fileID, datasetName);
@@ -612,8 +612,8 @@ public:
     error = testReadPointer2DArrayAttribute<uint32_t>(fileID, datasetName);
     error = testReadPointer2DArrayAttribute<int64_t>(fileID, datasetName);
     error = testReadPointer2DArrayAttribute<uint64_t>(fileID, datasetName);
-    error = testReadPointer2DArrayAttribute<float32>(fileID, datasetName);
-    error = testReadPointer2DArrayAttribute<float64>(fileID, datasetName);
+    error = testReadPointer2DArrayAttribute<float>(fileID, datasetName);
+    error = testReadPointer2DArrayAttribute<double>(fileID, datasetName);
 
     error = testReadPointer3DArrayAttribute<int8_t>(fileID, datasetName);
     error = testReadPointer3DArrayAttribute<uint8_t>(fileID, datasetName);
@@ -623,8 +623,8 @@ public:
     error = testReadPointer3DArrayAttribute<uint32_t>(fileID, datasetName);
     error = testReadPointer3DArrayAttribute<int64_t>(fileID, datasetName);
     error = testReadPointer3DArrayAttribute<uint64_t>(fileID, datasetName);
-    error = testReadPointer3DArrayAttribute<float32>(fileID, datasetName);
-    error = testReadPointer3DArrayAttribute<float64>(fileID, datasetName);
+    error = testReadPointer3DArrayAttribute<float>(fileID, datasetName);
+    error = testReadPointer3DArrayAttribute<double>(fileID, datasetName);
     //
     error = testReadVectorAttribute<int8_t>(fileID, datasetName);
     error = testReadVectorAttribute<uint8_t>(fileID, datasetName);
@@ -634,8 +634,8 @@ public:
     error = testReadVectorAttribute<uint32_t>(fileID, datasetName);
     error = testReadVectorAttribute<int64_t>(fileID, datasetName);
     error = testReadVectorAttribute<uint64_t>(fileID, datasetName);
-    error = testReadVectorAttribute<float32>(fileID, datasetName);
-    error = testReadVectorAttribute<float64>(fileID, datasetName);
+    error = testReadVectorAttribute<float>(fileID, datasetName);
+    error = testReadVectorAttribute<double>(fileID, datasetName);
 
     error = testReadScalarAttribute<int8_t>(fileID, datasetName);
     error = testReadScalarAttribute<uint8_t>(fileID, datasetName);
@@ -645,8 +645,8 @@ public:
     error = testReadScalarAttribute<uint32_t>(fileID, datasetName);
     error = testReadScalarAttribute<int64_t>(fileID, datasetName);
     error = testReadScalarAttribute<uint64_t>(fileID, datasetName);
-    error = testReadScalarAttribute<float32>(fileID, datasetName);
-    error = testReadScalarAttribute<float64>(fileID, datasetName);
+    error = testReadScalarAttribute<float>(fileID, datasetName);
+    error = testReadScalarAttribute<double>(fileID, datasetName);
 
     std::cout << " Passed"
               << "\n";
@@ -761,8 +761,8 @@ public:
     H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<uint32_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<int64_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<uint64_t>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<float32>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<float64>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<float>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(H5SupportTestHelper::testWritePointer2DArrayDataset<double>(fileID) >= 0);
 
     H5SUPPORT_REQUIRE(testWriteVectorDataset<int8_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testWriteVectorDataset<uint8_t>(fileID) >= 0);
@@ -772,8 +772,8 @@ public:
     H5SUPPORT_REQUIRE(testWriteVectorDataset<uint32_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testWriteVectorDataset<int64_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testWriteVectorDataset<uint64_t>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testWriteVectorDataset<float32>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testWriteVectorDataset<float64>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testWriteVectorDataset<float>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testWriteVectorDataset<double>(fileID) >= 0);
 
     H5SUPPORT_REQUIRE(testWriteScalarDataset<int8_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testWriteScalarDataset<uint8_t>(fileID) >= 0);
@@ -783,8 +783,8 @@ public:
     H5SUPPORT_REQUIRE(testWriteScalarDataset<uint32_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testWriteScalarDataset<int64_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testWriteScalarDataset<uint64_t>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testWriteScalarDataset<float32>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testWriteScalarDataset<float64>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testWriteScalarDataset<float>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testWriteScalarDataset<double>(fileID) >= 0);
 
     H5SUPPORT_REQUIRE(testWriteStringDatasetAndAttributes(fileID) >= 0);
 
@@ -797,8 +797,8 @@ public:
     H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<uint32_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<int64_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<uint64_t>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<float32>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<float64>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<float>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testReadPointer2DArrayDataset<double>(fileID) >= 0);
 
     H5SUPPORT_REQUIRE(testReadVectorDataset<int8_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadVectorDataset<uint8_t>(fileID) >= 0);
@@ -808,8 +808,8 @@ public:
     H5SUPPORT_REQUIRE(testReadVectorDataset<uint32_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadVectorDataset<int64_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadVectorDataset<uint64_t>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testReadVectorDataset<float32>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testReadVectorDataset<float64>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testReadVectorDataset<float>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testReadVectorDataset<double>(fileID) >= 0);
     //
     H5SUPPORT_REQUIRE(testReadScalarDataset<int8_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadScalarDataset<uint8_t>(fileID) >= 0);
@@ -819,8 +819,8 @@ public:
     H5SUPPORT_REQUIRE(testReadScalarDataset<uint32_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadScalarDataset<int64_t>(fileID) >= 0);
     H5SUPPORT_REQUIRE(testReadScalarDataset<uint64_t>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testReadScalarDataset<float32>(fileID) >= 0);
-    H5SUPPORT_REQUIRE(testReadScalarDataset<float64>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testReadScalarDataset<float>(fileID) >= 0);
+    H5SUPPORT_REQUIRE(testReadScalarDataset<double>(fileID) >= 0);
 
     H5SUPPORT_REQUIRE(testReadStringDatasetAndAttributes(fileID) >= 0);
 

@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_EXTENSIONS False)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(H5Support LANGUAGES C CXX VERSION 1.0.0.0)
 
@@ -46,90 +46,26 @@ if(H5Support_ENABLE_NAMESPACE)
   set(H5Support_NAMESPACE ON)
 endif()
 
-get_filename_component(H5Support_PARENT ${H5Support_SOURCE_DIR} DIRECTORY CACHE)
-
-#------------------------------------------------------------------------------
-# If the developer has set another CMP directory then use that, otherwise look
-# for the CMP directory at the same level as the SIMPL directory
-if("${CMP_SOURCE_DIR}" STREQUAL "")
-  if(EXISTS "${H5Support_SOURCE_DIR}/ExternalProjects/CMP")
-    set(CMP_SOURCE_DIR "${H5Support_SOURCE_DIR}/ExternalProjects/CMP")
-  elseif(EXISTS "${H5Support_PARENT}/CMP")
-    set(CMP_SOURCE_DIR ${H5Support_PARENT}/CMP)
-  else()
-    message(FATAL_ERROR "CMP_SOURCE_DIR was not set. Where is the CMP project directory. Please set the CMP_SOURCE_DIR variable to the CMP directory.")
-  endif()
-  message(STATUS "CMP_SOURCE_DIR: ${CMP_SOURCE_DIR}")
-endif()
-
-option(CMP_HDF5_ENABLE_INSTALL "Add install rules for HDF5" OFF)
-option(CMP_QT5_ENABLE_INSTALL "Add install rules for Qt5" OFF)
-
-include(${CMP_SOURCE_DIR}/ExtLib/HDF5Support.cmake)
-
 option(H5Support_INSTALL_FILES "Install as lib" OFF)
 
 option(BUILD_SHARED_LIBS "Build as shared library" ON)
 
-#-------------------------------------------------------------------------------
-# Set our H5Lite codes to also compile the Qt API version of H5Lite
-#-------------------------------------------------------------------------------
 set(H5Support_USE_QT 0)
 option(H5Support_INCLUDE_QT_API "Include support for using Qt classes with H5Lite" OFF)
 if(H5Support_INCLUDE_QT_API)
   set(H5Support_USE_QT 1)
+  set(CMAKE_AUTOMOC ON)
 endif()
 
-if(H5Support_INCLUDE_QT_API)
-  include(${CMP_SOURCE_DIR}/ExtLib/Qt5Support.cmake)
-  set(H5Support_USE_QtWebEngine FALSE)
-  set(H5Support_Qt5_Components Core)
-  CMP_AddQt5Support(  "${H5Support_Qt5_Components}"
-                      "${H5Support_USE_QtWebEngine}"
-                      "${H5Support_BINARY_DIR}"
-                      "H5Support")
+set(LIB_TYPE STATIC)
+if(BUILD_SHARED_LIBS)
+  set(LIB_TYPE SHARED)
 endif()
 
-set(H5Support_GENERATED_DIR "H5Support")
+add_library(H5Support ${LIB_TYPE})
+add_library(H5Support::H5Support ALIAS H5Support)
 
-set(H5Support_TOP_HEADER_FILE ${PROJECT_NAME}.h)
-set(H5Support_VERSION_HEADER_FILE ${PROJECT_NAME}Version.h)
-
-#-------------------------------------------------------------------------------
-# Include the cmp project to perform all the basic configuration tests for the
-# project.
-#-------------------------------------------------------------------------------
-set(CMP_HEADER_DIR ${${PROJECT_NAME}_BINARY_DIR}/${H5Support_GENERATED_DIR})
-set(CMP_CONFIGURATION_FILE_NAME "${PROJECT_NAME}Configuration.h")
-set(CMP_EXPORT_FILE_NAME "${PROJECT_NAME}DLLExport.h")
-set(CMP_TYPES_FILE_NAME "${PROJECT_NAME}Types.h")
-set(CMP_VERSION_HEADER_FILE_NAME "${H5Support_GENERATED_DIR}/${PROJECT_NAME}Version.h")
-set(CMP_VERSION_SOURCE_FILE_NAME "${H5Support_GENERATED_DIR}/${PROJECT_NAME}Version.cpp")
-set(CMP_TOP_HEADER_FILE "${H5Support_GENERATED_DIR}/${H5Support_TOP_HEADER_FILE}")
-set(CMP_PROJECT_NAMESPACE "${PROJECT_NAME}")
-set(CMP_PROJECT_NAME "${PROJECT_NAME}")
-set(CMP_ENABLE_PLUGINS "0")
-set(CMP_LIB_SEARCH_DIRS "")
-set(CMP_GENERATE_VERSION_STRING 1)
-
-if(H5Support_INCLUDE_QT_API)
-  set(CMP_STRING_CLASS "QString")
-  set(CMP_STRING_INCLUDE "<QtCore/QString>")
-else()
-  set(CMP_STRING_CLASS "std::string")
-  set(CMP_STRING_INCLUDE "<string>")
-endif()
-
-set(PROJECT_INSTALL_HEADERS "${H5Support_INSTALL_FILES}")
-
-include(${CMP_SOURCE_DIR}/cmpProject.cmake)
-
-set(H5Support_SRCS
-  ${H5Support_SOURCE_DIR}/Source/H5Support/H5Lite.cpp
-  ${H5Support_SOURCE_DIR}/Source/H5Support/H5Utilities.cpp
-  ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedSentinel.cpp
-  ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedErrorHandler.cpp
-)
+set_target_properties(H5Support PROPERTIES FOLDER H5SupportProj)
 
 set(H5Support_HDRS
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5Lite.h
@@ -139,63 +75,26 @@ set(H5Support_HDRS
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5Macros.h
 )
 
+set(H5Support_SRCS
+  ${H5Support_SOURCE_DIR}/Source/H5Support/H5Lite.cpp
+  ${H5Support_SOURCE_DIR}/Source/H5Support/H5Utilities.cpp
+  ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedSentinel.cpp
+  ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedErrorHandler.cpp
+)
+
 if(H5Support_USE_QT)
-  set(H5Support_SRCS
-    ${H5Support_SRCS}
+  list(APPEND H5Support_HDRS
+    ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Lite.h
+    ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Utilities.h
+  )  
+
+  list(APPEND H5Support_SRCS
     ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Lite.cpp
     ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Utilities.cpp
   )
-  set(H5Support_HDRS
-    ${H5Support_HDRS}
-    ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Lite.h
-    ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Utilities.h
-  )
 endif()
 
-#---------------------------------
-# Now configure the main header file.
-configure_file(${H5Support_SOURCE_DIR}/Resources/CMake/H5Support.h.in
-               ${H5Support_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
-)
-
-cmp_IDE_SOURCE_PROPERTIES("H5Support" "${H5Support_HDRS}" "${H5Support_SRCS}" "0")
-
-set(H5Support_GENERATED_HEADERS
-  ${H5Support_BINARY_DIR}/${CMP_VERSION_HEADER_FILE_NAME}
-  ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}
-  ${H5Support_BINARY_DIR}/${CMP_TOP_HEADER_FILE}
-  ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}
-)
-
-set(H5Support_GENERATED_SOURCES
-  ${H5Support_BINARY_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}
-)
-
-set(PROJECT_SRCS
-  ${H5Support_SRCS}
-  ${H5Support_HDRS}
-  ${H5Support_GENERATED_HEADERS}
-  ${H5Support_GENERATED_SOURCES}
-)
-
-set(EXE_DEBUG_EXTENSION "_d")
-
-set(LIB_TYPE STATIC)
-if(BUILD_SHARED_LIBS)
-  set(LIB_TYPE SHARED)
-endif()
-
-add_library(${PROJECT_NAME} ${LIB_TYPE} ${PROJECT_SRCS})
-add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-CMP_AddDefinitions(TARGET ${PROJECT_NAME})
-LibraryProperties(${PROJECT_NAME} ${EXE_DEBUG_EXTENSION})
-
-target_include_directories(${PROJECT_NAME}
-  PUBLIC
-    $<INSTALL_INTERFACE:include>
-    $<BUILD_INTERFACE:${H5Support_SOURCE_DIR}/Source>
-    $<BUILD_INTERFACE:${H5Support_BINARY_DIR}>
-)
+source_group("H5Support" FILES ${H5Support_HDRS} ${H5Support_SRCS})
 
 set(H5Support_EXPORT_FILE_NAME ${H5Support_BINARY_DIR}/H5Support/H5SupportDLLExport.h)
 
@@ -213,21 +112,79 @@ generate_export_header(${PROJECT_NAME}
   CUSTOM_CONTENT_FROM_VARIABLE EXPORT_HEADER_MESSAGE
 )
 
-target_sources(${PROJECT_NAME}
-  PRIVATE
-    ${H5Support_EXPORT_FILE_NAME}
+set(H5Support_VERSION_CPP_PATH ${H5Support_BINARY_DIR}/H5Support/H5SupportVersion.cpp)
+set(H5Support_VERSION_H_PATH ${H5Support_BINARY_DIR}/H5Support/H5SupportVersion.h)
+
+set(VERSION_EXPORT_HEADER_INCLUDE "\"H5Support/H5Support.h\"")
+set(VERSION_EXPORT "H5Support_EXPORT")
+set(VERSION_NAMESPACE "H5Support")
+set(VERSION_HEADER_NAME "H5SupportVersion.h")
+
+configure_file(${H5Support_SOURCE_DIR}/Resources/CMake/Version.cpp.in ${H5Support_VERSION_CPP_PATH})
+configure_file(${H5Support_SOURCE_DIR}/Resources/CMake/Version.h.in ${H5Support_VERSION_H_PATH})
+
+set(H5Support_CONFIG_HEADER ${H5Support_BINARY_DIR}/H5Support/H5Support.h)
+configure_file(${H5Support_SOURCE_DIR}/Resources/CMake/H5Support.h.in ${H5Support_CONFIG_HEADER})
+
+set(H5Support_GENERATED_HEADERS
+  ${H5Support_VERSION_H_PATH}
+  ${H5Support_CONFIG_HEADER}
+  ${H5Support_EXPORT_FILE_NAME}
 )
 
-list(APPEND H5Support_GENERATED_HEADERS ${H5Support_EXPORT_FILE_NAME})
+set(H5Support_GENERATED_SOURCES
+  ${H5Support_VERSION_CPP_PATH}
+)
 
-cmp_IDE_GENERATED_PROPERTIES("Generated" "${H5Support_GENERATED_HEADERS}" "${H5Support_GENERATED_SOURCES}")
+source_group("Generated" FILES ${H5Support_GENERATED_HEADERS} ${H5Support_GENERATED_SOURCES})
 
-set(H5Support_Link_Libs ${HDF5_C_TARGET_NAME})
-if(H5Support_USE_QT)
-  set(H5Support_Link_Libs ${H5Support_Link_Libs} Qt5::Core)
+target_sources(H5Support
+  PRIVATE
+    ${H5Support_HDRS}
+    ${H5Support_SRCS}
+    ${H5Support_GENERATED_HEADERS}
+    ${H5Support_GENERATED_SOURCES}
+)
+
+set_target_properties(H5Support
+  PROPERTIES
+    DEBUG_POSTFIX "_d"
+    POSITION_INDEPENDENT_CODE ON
+)
+
+target_include_directories(H5Support
+  PUBLIC
+    $<INSTALL_INTERFACE:include>
+    $<BUILD_INTERFACE:${H5Support_SOURCE_DIR}/Source>
+    $<BUILD_INTERFACE:${H5Support_BINARY_DIR}>
+)
+
+include(${H5Support_SOURCE_DIR}/Resources/CMake/TargetCopyInstall.cmake)
+
+find_package(hdf5 REQUIRED)
+
+option(H5Support_INSTALL_HDF5 "Enable install of HDF5 dlls" OFF)
+option(H5Support_INSTALL_QT5 "Enable install of Qt5 dlls" OFF)
+
+set(HDF5_RULES COPY)
+if(H5Support_INSTALL_HDF5)
+  list(APPEND HDF5_RULES " " INSTALL)
 endif()
 
-target_link_libraries(${PROJECT_NAME} 
+TargetCopyInstall(${HDF5_RULES} NAME "hdf5" TARGET hdf5::hdf5-shared)
+
+set(H5Support_Link_Libs hdf5::hdf5-shared)
+if(H5Support_USE_QT)
+  set(QT5_RULES COPY)
+  if(H5Support_INSTALL_QT5)
+    list(APPEND QT5_RULES " " INSTALL)
+  endif()
+  find_package(Qt5 COMPONENTS Core REQUIRED)
+  TargetCopyInstall(${QT5_RULES} NAME "Qt5Core" TARGET Qt5::Core)
+  list(APPEND H5Support_Link_Libs Qt5::Core)
+endif()
+
+target_link_libraries(H5Support
   PUBLIC
     ${H5Support_Link_Libs}
 )
@@ -249,34 +206,28 @@ elseif(WIN32)
   endif()
 endif()
 
-install(TARGETS ${PROJECT_NAME}
-    EXPORT H5SupportTargets
-    COMPONENT Applications
-    RUNTIME DESTINATION ${install_dir}
-    LIBRARY DESTINATION ${lib_install_dir}
-    ARCHIVE DESTINATION lib
-    BUNDLE DESTINATION "."
+install(TARGETS H5Support
+  EXPORT H5SupportTargets
+  COMPONENT Applications
+  RUNTIME DESTINATION ${install_dir}
+  LIBRARY DESTINATION ${lib_install_dir}
+  ARCHIVE DESTINATION lib
+  BUNDLE DESTINATION "."
 )
 
-set(ConfigPackageLocation cmake/${PROJECT_NAME})
-
-# --------------------------------------------------------------------
-# Allow the generation and installation of a CMake configuration file
-# which makes using H5Support from another project easier.
-# --------------------------------------------------------------------
 export(EXPORT H5SupportTargets
-  FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}/${PROJECT_NAME}Targets.cmake"
+  FILE ${H5Support_BINARY_DIR}/H5SupportTargets.cmake
   NAMESPACE H5Support::
 )
 
 if(H5Support_INSTALL_FILES)
   install(EXPORT H5SupportTargets
     FILE
-      ${PROJECT_NAME}Targets.cmake
+      H5SupportTargets.cmake
     NAMESPACE
-      ${PROJECT_NAME}::
+      H5Support::
     DESTINATION
-      ${ConfigPackageLocation}
+      cmake/H5Support
   )
 
   configure_file(${H5Support_SOURCE_DIR}/Resources/CMake/H5SupportConfig.cmake.in H5SupportConfig.cmake @ONLY)
@@ -290,17 +241,14 @@ if(H5Support_INSTALL_FILES)
       ${H5Support_HDRS}
       ${H5Support_GENERATED_HEADERS}
     DESTINATION
-      include/${PROJECT_NAME}
+      include/H5Support
   )
 endif()
 
 option(H5Support_BUILD_TESTING "Build H5Support tests" OFF)
 
-# ------- Enable the CTest testing. ---------------
-# -------------------------------------------------------------------- 
-# If Testing is enabled, turn on the Unit Tests 
 if(H5Support_BUILD_TESTING)
-    include(${H5Support_SOURCE_DIR}/Test/CMakeLists.txt)
+  include(${H5Support_SOURCE_DIR}/Test/CMakeLists.txt)
 endif()
 
 option(H5Support_PACKAGE "Enables packaging for H5Support" ON)

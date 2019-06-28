@@ -10,12 +10,6 @@
 /* Define if H5Support is using Qt classes in addition to STL classes */
 #cmakedefine H5Support_USE_QT @H5Support_USE_QT@
 
-/* Include the Overall Configuration header file */
-#include "@PROJECT_NAME@/@CMP_CONFIGURATION_FILE_NAME@"
-
-/* Include the Typedefs Header */
-#include "@PROJECT_NAME@/@CMP_TYPES_FILE_NAME@"
-
 /* Include the DLL export preprocessor defines */
 #include "@PROJECT_NAME@/@PROJECT_NAME@DLLExport.h"
 

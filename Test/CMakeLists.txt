@@ -4,8 +4,6 @@ set(PLUGIN_NAME "H5Support")
 set(${PLUGIN_NAME}Test_SOURCE_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test)
 set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 
-include(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake)
-
 set(TEST_TEMP_DIR ${${PLUGIN_NAME}Test_BINARY_DIR}/Test/Temp)
 # Make sure the directory is created during CMake time
 file(MAKE_DIRECTORY ${TEST_TEMP_DIR})
@@ -41,7 +39,7 @@ foreach(name ${TEST_NAMES})
   )
 endforeach()
 
-STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors})
+string(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors})
 
 configure_file(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/CMake/${PLUGIN_NAME}TestMain.cpp.in
   ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY
@@ -63,11 +61,10 @@ add_executable(H5SupportUnitTest
   ${${PLUGIN_NAME}Test_SOURCE_DIR}/H5SupportTestHelper.h
   ${H5SUPPORT_GENERATED_TEST_FILES}
 )
-CMP_AddDefinitions(TARGET H5SupportUnitTest)
 set_target_properties(H5SupportUnitTest PROPERTIES FOLDER "H5SupportProj/Test")
 
-cmp_IDE_SOURCE_PROPERTIES("Generated" "" "${H5SUPPORT_GENERATED_TEST_FILES}" "0")
-cmp_IDE_SOURCE_PROPERTIES("Tests" "" "${${PLUGIN_NAME}_TEST_SRCS}" "0")
+source_group("Generated" FILES ${H5SUPPORT_GENERATED_TEST_FILES})
+source_group("Tests" FILES ${${PLUGIN_NAME}_TEST_SRCS})
 
 target_include_directories(H5SupportUnitTest
   PRIVATE

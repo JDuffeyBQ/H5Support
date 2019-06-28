@@ -247,8 +247,8 @@ template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32
   error = testWritePointer3DArrayAttribute<int16_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer3DArrayAttribute<int32_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer3DArrayAttribute<int64_t>(file_id, dsetName, attributesWritten);
-  error = testWritePointer3DArrayAttribute<float32>(file_id, dsetName, attributesWritten);
-  error = testWritePointer3DArrayAttribute<float64>(file_id, dsetName, attributesWritten);
+  error = testWritePointer3DArrayAttribute<float>(file_id, dsetName, attributesWritten);
+  error = testWritePointer3DArrayAttribute<double>(file_id, dsetName, attributesWritten);
 
   error = testWritePointer1DArrayAttribute<int8_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer1DArrayAttribute<uint8_t>(file_id, dsetName, attributesWritten);
@@ -258,8 +258,8 @@ template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32
   error = testWritePointer1DArrayAttribute<uint32_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer1DArrayAttribute<int64_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer1DArrayAttribute<uint64_t>(file_id, dsetName, attributesWritten);
-  error = testWritePointer1DArrayAttribute<float32>(file_id, dsetName, attributesWritten);
-  error = testWritePointer1DArrayAttribute<float64>(file_id, dsetName, attributesWritten);
+  error = testWritePointer1DArrayAttribute<float>(file_id, dsetName, attributesWritten);
+  error = testWritePointer1DArrayAttribute<double>(file_id, dsetName, attributesWritten);
 
   error = testWritePointer2DArrayAttribute<int8_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer2DArrayAttribute<uint8_t>(file_id, dsetName, attributesWritten);
@@ -269,8 +269,8 @@ template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32
   error = testWritePointer2DArrayAttribute<uint32_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer2DArrayAttribute<int64_t>(file_id, dsetName, attributesWritten);
   error = testWritePointer2DArrayAttribute<uint64_t>(file_id, dsetName, attributesWritten);
-  error = testWritePointer2DArrayAttribute<float32>(file_id, dsetName, attributesWritten);
-  error = testWritePointer2DArrayAttribute<float64>(file_id, dsetName, attributesWritten);
+  error = testWritePointer2DArrayAttribute<float>(file_id, dsetName, attributesWritten);
+  error = testWritePointer2DArrayAttribute<double>(file_id, dsetName, attributesWritten);
 
   error = testWriteVectorAttribute<int8_t>(file_id, dsetName, attributesWritten);
   error = testWriteVectorAttribute<uint8_t>(file_id, dsetName, attributesWritten);
@@ -280,8 +280,8 @@ template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32
   error = testWriteVectorAttribute<uint32_t>(file_id, dsetName, attributesWritten);
   error = testWriteVectorAttribute<int64_t>(file_id, dsetName, attributesWritten);
   error = testWriteVectorAttribute<uint64_t>(file_id, dsetName, attributesWritten);
-  error = testWriteVectorAttribute<float32>(file_id, dsetName, attributesWritten);
-  error = testWriteVectorAttribute<float64>(file_id, dsetName, attributesWritten);
+  error = testWriteVectorAttribute<float>(file_id, dsetName, attributesWritten);
+  error = testWriteVectorAttribute<double>(file_id, dsetName, attributesWritten);
 
   error = testWriteScalarAttribute<int8_t>(file_id, dsetName, attributesWritten);
   error = testWriteScalarAttribute<uint8_t>(file_id, dsetName, attributesWritten);
@@ -291,8 +291,8 @@ template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32
   error = testWriteScalarAttribute<uint32_t>(file_id, dsetName, attributesWritten);
   error = testWriteScalarAttribute<int64_t>(file_id, dsetName, attributesWritten);
   error = testWriteScalarAttribute<uint64_t>(file_id, dsetName, attributesWritten);
-  error = testWriteScalarAttribute<float32>(file_id, dsetName, attributesWritten);
-  error = testWriteScalarAttribute<float64>(file_id, dsetName, attributesWritten);
+  error = testWriteScalarAttribute<float>(file_id, dsetName, attributesWritten);
+  error = testWriteScalarAttribute<double>(file_id, dsetName, attributesWritten);
 
   std::cout << " Passed" << '\n';
   return error;
