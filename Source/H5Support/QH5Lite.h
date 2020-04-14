@@ -45,6 +45,7 @@
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Support.h"
+#include "H5Support/QtBackwardsCompatibilityMacro.h"
 
 #ifndef H5Support_USE_QT
 #pragma message("THIS FILE SHOULD NOT BE INCLUDED UNLESS THE H5Support_USE_QT is also defined")
@@ -208,7 +209,9 @@ template <typename T> inline herr_t writeVectorDataset(hid_t locationID, const Q
  */
 inline QVector<hsize_t> guessChunkSize(const QVector<hsize_t>& dims, size_t typeSize)
 {
-  return QVector<hsize_t>::fromStdVector(H5Lite::guessChunkSize(dims.size(), dims.data(), typeSize));
+  std::vector<hsize_t> chunkSize = H5Lite::guessChunkSize(dims.size(), dims.data(), typeSize);
+  QVECTOR_FROM_STD_VECTOR(QVector<hsize_t>, retQVec, chunkSize);
+  return retQVec;
 }
 
 #ifdef H5_HAVE_FILTER_DEFLATE
@@ -693,7 +696,7 @@ inline herr_t readStringDataset(hid_t locationID, const QString& datasetName, ch
  */
 inline herr_t getAttributeInfo(hid_t locationID, const QString& objectName, const QString& attributeName, QVector<hsize_t>& dims, H5T_class_t& type_class, size_t& type_size, hid_t& typeID)
 {
-  std::vector<hsize_t> rDims = dims.toStdVector();
+  QVECTOR_TO_STD_VECTOR(std::vector<hsize_t>, dims, rDims);
   herr_t error = H5Lite::getAttributeInfo(locationID, objectName.toStdString(), attributeName.toStdString(), rDims, type_class, type_size, typeID);
   dims.resize(static_cast<qint32>(rDims.size()));
   for(std::vector<hsize_t>::size_type i = 0; i < rDims.size(); ++i)
