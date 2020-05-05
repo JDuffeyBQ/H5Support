@@ -26,6 +26,11 @@ find_package(hdf5 REQUIRED)
 add_library(H5Support INTERFACE)
 add_library(H5Support::H5Support ALIAS H5Support)
 
+target_compile_features(H5Support
+  INTERFACE
+    cxx_std_14
+)
+
 if(H5Support_INCLUDE_QT_API)
   target_compile_definitions(H5Support INTERFACE H5Support_USE_QT)
 endif()
@@ -37,8 +42,6 @@ endif()
 if(H5Support_USE_MUTEX)
   target_compile_definitions(H5Support INTERFACE H5Support_USE_MUTEX)
 endif()
-
-#set_target_properties(H5Support PROPERTIES FOLDER H5SupportProj)
 
 set(H5Support_HDRS
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5Lite.h
@@ -55,12 +58,12 @@ if(H5Support_USE_QT)
   )
 endif()
 
-source_group("H5Support" FILES ${H5Support_HDRS})
-
 target_sources(H5Support
   INTERFACE
     ${H5Support_HDRS}
 )
+
+source_group("H5Support" FILES ${H5Support_HDRS})
 
 target_include_directories(H5Support
   INTERFACE
