@@ -21,7 +21,7 @@ set(H5Support_USER_NAMESPACE "H5Support" CACHE STRING "Namespace for H5Support")
 
 option(H5Support_INCLUDE_QT_API "Include support for using Qt classes with H5Lite" ON)
 
-find_package(hdf5 REQUIRED)
+find_package(HDF5 NAMES hdf5 REQUIRED CONFIG)
 
 add_library(H5Support INTERFACE)
 add_library(H5Support::H5Support ALIAS H5Support)
