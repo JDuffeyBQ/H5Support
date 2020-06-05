@@ -50,7 +50,7 @@ namespace H5Support_NAMESPACE
  * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
  * is closed when the variable goes out of Scope
  */
-class H5Support_EXPORT H5ScopedFileSentinel
+class H5ScopedFileSentinel
 {
 public:
   H5ScopedFileSentinel(hid_t* fileID, bool turnOffErrors)
@@ -119,7 +119,7 @@ private:
  * @brief The H5ScopedGroupSentinel class ensures the HDF5 group that is currently open
  * is closed when the variable goes out of Scope
  */
-class H5Support_EXPORT H5ScopedGroupSentinel
+class H5ScopedGroupSentinel
 {
 public:
   H5ScopedGroupSentinel(hid_t* groupID, bool turnOffErrors)
@@ -170,7 +170,7 @@ private:
  * @brief The H5ScopedObjectSentinel class ensures the HDF5 object that is currently open
  * is closed when the variable goes out of Scope
  */
-class H5Support_EXPORT H5ScopedObjectSentinel
+class H5ScopedObjectSentinel
 {
 public:
   H5ScopedObjectSentinel(hid_t* objectID, bool turnOffErrors)
@@ -221,7 +221,7 @@ private:
 /**
  * @brief The H5GroupAutoCloser class
  */
-class H5Support_EXPORT H5GroupAutoCloser
+class H5GroupAutoCloser
 {
 public:
   H5GroupAutoCloser(hid_t* groupId)
@@ -229,7 +229,7 @@ public:
   {
   }
 
-  virtual ~H5GroupAutoCloser()
+  ~H5GroupAutoCloser()
   {
     if(*gid > 0)
     {

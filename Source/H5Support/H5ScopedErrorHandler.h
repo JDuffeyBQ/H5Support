@@ -50,7 +50,7 @@ namespace H5Support_NAMESPACE
  * instance goes out of scope the original error handlers will be put back in
  * place
  */
-class H5Support_EXPORT H5ScopedErrorHandler
+class H5ScopedErrorHandler
 {
 public:
   H5ScopedErrorHandler()
