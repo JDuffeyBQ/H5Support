@@ -103,7 +103,7 @@ export(TARGETS H5Support
   FILE ${H5Support_BINARY_DIR}/H5SupportTargets.cmake
 )
 
-option(H5Support_BUILD_TESTING "Build H5Support tests" OFF)
+option(H5Support_BUILD_TESTING "Build H5Support tests" ON)
 
 if(H5Support_BUILD_TESTING)
   include(${H5Support_SOURCE_DIR}/Test/CMakeLists.txt)
