@@ -136,16 +136,6 @@ inline herr_t find_attr(hid_t /*locationID*/, const char* name, const H5A_info_t
   return returnError;
 }
 
-template <class T, class Compare> inline constexpr const T& clamp(const T& v, const T& lo, const T& hi, Compare comp)
-{
-  return assert(!comp(hi, lo)), comp(v, lo) ? lo : comp(hi, v) ? hi : v;
-}
-
-template <class T> inline constexpr const T& clamp(const T& v, const T& lo, const T& hi)
-{
-  return clamp(v, lo, hi, std::less<>());
-}
-
 /**
  * @brief Turns off the global error handler/reporting objects. Note that once
  * they are turned off using this method they CAN NOT be turned back on. If you
@@ -867,7 +857,7 @@ inline std::vector<hsize_t> guessChunkSize(const std::vector<hsize_t>& dims, siz
   hsize_t datasetSize = product * typeSize;
   double percentage = std::pow(2.0, std::log10(static_cast<double>(datasetSize) / (1024.0 * 1024.0)));
   hsize_t targetSize = static_cast<hsize_t>(static_cast<double>(k_ChunkBase) * percentage);
-  targetSize = clamp(targetSize, static_cast<hsize_t>(k_ChunkMin), static_cast<hsize_t>(k_ChunkMax));
+  targetSize = std::clamp(targetSize, static_cast<hsize_t>(k_ChunkMin), static_cast<hsize_t>(k_ChunkMax));
 
   size_t index = 0;
 
