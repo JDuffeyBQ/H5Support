@@ -421,47 +421,47 @@ template <typename T> inline std::string HDFTypeForPrimitiveAsStr(T value)
 {
   H5SUPPORT_MUTEX_LOCK()
 
-  if(std::is_same<T, int8_t>::value)
+  if constexpr(std::is_same_v<T, int8_t>)
   {
     return "H5T_NATIVE_INT8";
   }
-  if(std::is_same<T, uint8_t>::value)
+  if constexpr(std::is_same_v<T, uint8_t>)
   {
     return "H5T_NATIVE_UINT8";
   }
 
-  if(std::is_same<T, int16_t>::value)
+  if constexpr(std::is_same_v<T, int16_t>)
   {
     return "H5T_NATIVE_INT16";
   }
-  if(std::is_same<T, uint16_t>::value)
+  if constexpr(std::is_same_v<T, uint16_t>)
   {
     return "H5T_NATIVE_UINT16";
   }
 
-  if(std::is_same<T, int32_t>::value)
+  if constexpr(std::is_same_v<T, int32_t>)
   {
     return "H5T_NATIVE_INT32";
   }
-  if(std::is_same<T, uint32_t>::value)
+  if constexpr(std::is_same_v<T, uint32_t>)
   {
     return "H5T_NATIVE_UINT32";
   }
 
-  if(std::is_same<T, int64_t>::value)
+  if constexpr(std::is_same_v<T, int64_t>)
   {
     return "H5T_NATIVE_INT64";
   }
-  if(std::is_same<T, uint64_t>::value)
+  if constexpr(std::is_same_v<T, uint64_t>)
   {
     return "H5T_NATIVE_UINT64";
   }
 
-  if(std::is_same<T, float>::value)
+  if constexpr(std::is_same_v<T, float>)
   {
     return "H5T_NATIVE_FLOAT";
   }
-  if(std::is_same<T, double>::value)
+  if constexpr(std::is_same_v<T, double>)
   {
     return "H5T_NATIVE_DOUBLE";
   }
@@ -482,139 +482,139 @@ template <typename T> inline hid_t HDFTypeForPrimitive(T value)
 {
   H5SUPPORT_MUTEX_LOCK()
 
-  if(std::is_same<T, float>::value)
+  if constexpr(std::is_same_v<T, float>)
   {
     return H5T_NATIVE_FLOAT;
   }
-  if(std::is_same<T, double>::value)
+  if constexpr(std::is_same_v<T, double>)
   {
     return H5T_NATIVE_DOUBLE;
   }
 
-  if(std::is_same<T, int8_t>::value)
+  if constexpr(std::is_same_v<T, int8_t>)
   {
     return H5T_NATIVE_INT8;
   }
-  if(std::is_same<T, uint8_t>::value)
+  if constexpr(std::is_same_v<T, uint8_t>)
   {
     return H5T_NATIVE_UINT8;
   }
 #if CMP_TYPE_CHAR_IS_SIGNED
-  if(std::is_same<T, char>::value)
+  if constexpr(std::is_same_v<T, char>)
   {
     return H5T_NATIVE_INT8;
   }
 #else
-  if(std::is_same<T, char>::value)
+  if constexpr(std::is_same_v<T, char>)
   {
     return H5T_NATIVE_UINT8;
   }
 #endif
-  if(std::is_same<T, signed char>::value)
+  if constexpr(std::is_same_v<T, signed char>)
   {
     return H5T_NATIVE_INT8;
   }
-  if(std::is_same<T, unsigned char>::value)
+  if constexpr(std::is_same_v<T, unsigned char>)
   {
     return H5T_NATIVE_UINT8;
   }
 
-  if(std::is_same<T, int16_t>::value)
+  if constexpr(std::is_same_v<T, int16_t>)
   {
     return H5T_NATIVE_INT16;
   }
-  if(std::is_same<T, short>::value)
+  if constexpr(std::is_same_v<T, short>)
   {
     return H5T_NATIVE_INT16;
   }
-  if(std::is_same<T, signed short>::value)
+  if constexpr(std::is_same_v<T, signed short>)
   {
     return H5T_NATIVE_INT16;
   }
-  if(std::is_same<T, uint16_t>::value)
+  if constexpr(std::is_same_v<T, uint16_t>)
   {
     return H5T_NATIVE_UINT16;
   }
-  if(std::is_same<T, unsigned short>::value)
+  if constexpr(std::is_same_v<T, unsigned short>)
   {
     return H5T_NATIVE_UINT16;
   }
 
-  if(std::is_same<T, int32_t>::value)
+  if constexpr(std::is_same_v<T, int32_t>)
   {
     return H5T_NATIVE_INT32;
   }
-  if(std::is_same<T, uint32_t>::value)
+  if constexpr(std::is_same_v<T, uint32_t>)
   {
     return H5T_NATIVE_UINT32;
   }
 #if(CMP_SIZEOF_INT == 4)
-  if(std::is_same<T, int>::value)
+  if constexpr(std::is_same_v<T, int>)
   {
     return H5T_NATIVE_INT32;
   }
-  if(std::is_same<T, signed int>::value)
+  if constexpr(std::is_same_v<T, signed int>)
   {
     return H5T_NATIVE_INT32;
   }
-  if(std::is_same<T, unsigned int>::value)
+  if constexpr(std::is_same_v<T, unsigned int>)
   {
     return H5T_NATIVE_UINT32;
   }
 #endif
 
 #if(CMP_SIZEOF_LONG == 4)
-  if(std::is_same<T, long int>::value)
+  if constexpr(std::is_same_v<T, long int>)
   {
     return H5T_NATIVE_INT32;
   }
-  if(std::is_same<T, signed long int>::value)
+  if constexpr(std::is_same_v<T, signed long int>)
   {
     return H5T_NATIVE_INT32;
   }
-  if(std::is_same<T, unsigned long int>::value)
+  if constexpr(std::is_same_v<T, unsigned long int>)
   {
     return H5T_NATIVE_UINT32;
   }
 #elif(CMP_SIZEOF_LONG == 8)
-  if(std::is_same<T, long int>::value)
+  if constexpr(std::is_same_v<T, long int>)
   {
     return H5T_NATIVE_INT64;
   }
-  if(std::is_same<T, signed long int>::value)
+  if constexpr(std::is_same_v<T, signed long int>)
   {
     return H5T_NATIVE_INT64;
   }
-  if(std::is_same<T, unsigned long int>::value)
+  if constexpr(std::is_same_v<T, unsigned long int>)
   {
     return H5T_NATIVE_UINT64;
   }
 #endif
 
 #if(CMP_SIZEOF_LONG_LONG == 8)
-  if(std::is_same<T, long long int>::value)
+  if constexpr(std::is_same_v<T, long long int>)
   {
     return H5T_NATIVE_INT64;
   }
-  if(std::is_same<T, signed long long int>::value)
+  if constexpr(std::is_same_v<T, signed long long int>)
   {
     return H5T_NATIVE_INT64;
   }
-  if(std::is_same<T, unsigned long long int>::value)
+  if constexpr(std::is_same_v<T, unsigned long long int>)
   {
     return H5T_NATIVE_UINT64;
   }
 #endif
-  if(std::is_same<T, int64_t>::value)
+  if constexpr(std::is_same_v<T, int64_t>)
   {
     return H5T_NATIVE_INT64;
   }
-  if(std::is_same<T, uint64_t>::value)
+  if constexpr(std::is_same_v<T, uint64_t>)
   {
     return H5T_NATIVE_UINT64;
   }
 
-  if(std::is_same<T, bool>::value)
+  if constexpr(std::is_same_v<T, bool>)
   {
     return H5T_NATIVE_UINT8;
   }
