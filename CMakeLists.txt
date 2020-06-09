@@ -51,7 +51,7 @@ set(H5Support_HDRS
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5Macros.h
 )
 
-if(H5Support_USE_QT)
+if(H5Support_INCLUDE_QT_API)
   list(APPEND H5Support_HDRS
     ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Lite.h
     ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Utilities.h

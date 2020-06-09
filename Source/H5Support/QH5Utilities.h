@@ -42,7 +42,7 @@
 #include "H5Support/H5Utilities.h"
 
 #ifndef H5Support_USE_QT
-#pragma message("THIS FILE SHOULD NOT BE INCLUDED UNLESS THE H5Support_USE_QT is also defined")
+#error "THIS FILE SHOULD NOT BE INCLUDED UNLESS THE H5Support_USE_QT is also defined"
 #endif
 
 #include <QtCore/QDebug>
