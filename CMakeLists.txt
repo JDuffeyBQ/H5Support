@@ -5,7 +5,7 @@ cmake_policy(SET CMP0077 NEW)
 
 cmake_minimum_required(VERSION 3.14)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -28,7 +28,7 @@ add_library(H5Support::H5Support ALIAS H5Support)
 
 target_compile_features(H5Support
   INTERFACE
-    cxx_std_14
+    cxx_std_17
 )
 
 if(H5Support_INCLUDE_QT_API)
