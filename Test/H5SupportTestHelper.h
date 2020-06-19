@@ -142,7 +142,6 @@ template <typename T> herr_t testWritePointer3DArrayAttribute(hid_t file_id, con
   std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
   H5SUPPORT_REQUIRE(attributeKey.empty() == false);
   attributeKey = "3DArrayAttribute<" + attributeKey + ">";
-  int32_t rank = Constants::rank3D;
 
   constexpr size_t dataSize = Constants::dim0 * Constants::dim1 * Constants::dim2;
 
