@@ -49,6 +49,7 @@ set(H5Support_HDRS
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedSentinel.h
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedErrorHandler.h
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5Macros.h
+  ${H5Support_SOURCE_DIR}/Source/H5Support/H5SupportTypeDefs.h
 )
 
 if(H5Support_INCLUDE_QT_API)
