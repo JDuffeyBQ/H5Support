@@ -418,6 +418,19 @@ inline bool isGroup(hid_t nodeID, const std::string& objectName)
 }
 
 /**
+ * @brief objectExists Returns true if an object with the name exists in the given group or file
+ * @param nodeID
+ * @param objectName
+ * @return True if an object with the name exists
+ */
+inline bool objectExists(hid_t nodeID, const std::string& objectName)
+{
+  H5SUPPORT_MUTEX_LOCK()
+  htri_t err = H5Oexists_by_name(nodeID, objectName.c_str(), H5P_DEFAULT);
+  return (err > 0);
+}
+
+/**
  * @brief Opens an HDF5 object for hdf5 operations
  * @param locId the Object id of the parent
  * @param objectPath The path of the object to open
