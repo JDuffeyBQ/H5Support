@@ -1981,6 +1981,7 @@ inline herr_t readVectorOfStringDataset(hid_t locationID, const std::string& dat
     {
       CloseH5S(dataspaceID, error, returnError);
       CloseH5T(typeID, error, returnError);
+      CloseH5D(datasetID, error, returnError, datasetName);
       std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Number of dims should be 1 but it was " << nDims << ". Returning early. Is your data file correct?" << std::endl;
       return -2;
     }
@@ -1993,6 +1994,9 @@ inline herr_t readVectorOfStringDataset(hid_t locationID, const std::string& dat
     hid_t memtype = H5Tcopy(H5T_C_S1);
     herr_t status = H5Tset_size(memtype, H5T_VARIABLE);
 
+    H5T_cset_t characterSet = H5Tget_cset(typeID);
+    status = H5Tset_cset(memtype, characterSet);
+
     /*
      * Read the data.
      */
@@ -2003,6 +2007,7 @@ inline herr_t readVectorOfStringDataset(hid_t locationID, const std::string& dat
       CloseH5S(dataspaceID, error, returnError);
       CloseH5T(typeID, error, returnError);
       CloseH5T(memtype, error, returnError);
+      CloseH5D(datasetID, error, returnError, datasetName);
       std::cout << "H5Lite.cpp::readVectorOfStringDataset(" << __LINE__ << ") Error reading Dataset at locationID (" << locationID << ") with object name (" << datasetName << ")" << std::endl;
       return -3;
     }
