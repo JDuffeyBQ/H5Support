@@ -50,12 +50,14 @@ set(H5Support_HDRS
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5ScopedErrorHandler.h
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5Macros.h
   ${H5Support_SOURCE_DIR}/Source/H5Support/H5SupportTypeDefs.h
+  ${H5Support_SOURCE_DIR}/Source/H5Support/H5Support.h
 )
 
 if(H5Support_INCLUDE_QT_API)
   list(APPEND H5Support_HDRS
     ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Lite.h
     ${H5Support_SOURCE_DIR}/Source/H5Support/QH5Utilities.h
+    ${H5Support_SOURCE_DIR}/Source/H5Support/QtBackwardsCompatibilityMacro.h
   )
 endif()
 
