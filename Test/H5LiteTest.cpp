@@ -109,7 +109,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadPointer1DArrayAttribute(hid_t fileID, const std::string& datasetName)
+  template <typename T>
+  herr_t testReadPointer1DArrayAttribute(hid_t fileID, const std::string& datasetName)
   {
     T value = 0x0;
     herr_t error = -1;
@@ -150,7 +151,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadPointer2DArrayAttribute(hid_t fileID, const std::string& datasetName)
+  template <typename T>
+  herr_t testReadPointer2DArrayAttribute(hid_t fileID, const std::string& datasetName)
   {
     T value = 0x0;
     herr_t error = -1;
@@ -196,7 +198,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadPointer3DArrayAttribute(hid_t fileID, const std::string& datasetName)
+  template <typename T>
+  herr_t testReadPointer3DArrayAttribute(hid_t fileID, const std::string& datasetName)
   {
     T value = 0x0;
     herr_t error = -1;
@@ -244,7 +247,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadVectorAttribute(hid_t fileID, std::string datasetName)
+  template <typename T>
+  herr_t testReadVectorAttribute(hid_t fileID, std::string datasetName)
   {
     T value = 0x0;
     herr_t error = -1;
@@ -270,7 +274,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadScalarAttribute(hid_t fileID, const std::string& datasetName)
+  template <typename T>
+  herr_t testReadScalarAttribute(hid_t fileID, const std::string& datasetName)
   {
     T value = 0x0F;
     T refValue = value;
@@ -288,7 +293,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testWriteVectorDataset(hid_t fileID)
+  template <typename T>
+  herr_t testWriteVectorDataset(hid_t fileID)
   {
     T value = 0x0;
     herr_t error = 1;
@@ -315,7 +321,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadVectorDataset(hid_t fileID)
+  template <typename T>
+  herr_t testReadVectorDataset(hid_t fileID)
   {
     T value = 0x0;
     herr_t error = 1;
@@ -344,7 +351,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testWriteScalarDataset(hid_t fileID)
+  template <typename T>
+  herr_t testWriteScalarDataset(hid_t fileID)
   {
     T value = 0x0F;
     herr_t error = 1;
@@ -369,7 +377,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadScalarDataset(hid_t fileID)
+  template <typename T>
+  herr_t testReadScalarDataset(hid_t fileID)
   {
     T value = 0x0F;
     T refValue = value;
@@ -516,7 +525,8 @@ public:
   // -----------------------------------------------------------------------------
   //  Uses Raw Pointers to read data from the data file
   // -----------------------------------------------------------------------------
-  template <typename T> herr_t testReadPointer2DArrayDataset(hid_t fileID)
+  template <typename T>
+  herr_t testReadPointer2DArrayDataset(hid_t fileID)
   {
     // Create the reference data
     T value = 0x0;
@@ -852,7 +862,8 @@ public:
     H5SUPPORT_REQUIRE(error >= 0);
   }
 
-  template <typename T> hid_t _testTypeName()
+  template <typename T>
+  hid_t _testTypeName()
   {
     T v = 0x00;
     return H5Lite::HDFTypeForPrimitive<T>(v);

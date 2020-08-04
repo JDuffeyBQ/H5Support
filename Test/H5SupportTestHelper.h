@@ -67,7 +67,8 @@ constexpr size_t rank3D = 3;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -93,7 +94,8 @@ template <typename T> herr_t testWritePointer1DArrayAttribute(hid_t file_id, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer2DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer2DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -130,7 +132,8 @@ template <typename T> herr_t testWritePointer2DArrayAttribute(hid_t file_id, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer3DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer3DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -168,7 +171,8 @@ template <typename T> herr_t testWritePointer3DArrayAttribute(hid_t file_id, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWriteVectorAttribute(hid_t file_id, std::string dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWriteVectorAttribute(hid_t file_id, std::string dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -198,7 +202,8 @@ template <typename T> herr_t testWriteVectorAttribute(hid_t file_id, std::string
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWriteScalarAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWriteScalarAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -218,7 +223,8 @@ template <typename T> herr_t testWriteScalarAttribute(hid_t file_id, const std::
 // -----------------------------------------------------------------------------
 //  Uses Raw Pointers to save data to the data file
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer2DArrayDataset(hid_t file_id, int32_t* attributesWritten = nullptr)
 {
   T value = 0x0;
   herr_t error = 1;

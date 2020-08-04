@@ -417,7 +417,8 @@ inline std::string StringForHDFType(hid_t dataTypeIdentifier)
  * from
  * @return A std::string representing the HDF5 Type
  */
-template <typename T> inline std::string HDFTypeForPrimitiveAsStr(T value)
+template <typename T>
+inline std::string HDFTypeForPrimitiveAsStr(T value)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -478,7 +479,8 @@ template <typename T> inline std::string HDFTypeForPrimitiveAsStr(T value)
  * from
  * @return The HDF5 native type for the value
  */
-template <typename T> inline hid_t HDFTypeForPrimitive(T value)
+template <typename T>
+inline hid_t HDFTypeForPrimitive(T value)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -674,7 +676,8 @@ inline bool datasetExists(hid_t locationID, const std::string& datasetName)
  * @param data The data to be written.
  * @return Standard hdf5 error condition.
  */
-template <typename T> inline herr_t writePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t writePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -749,7 +752,8 @@ template <typename T> inline herr_t writePointerDataset(hid_t locationID, const 
  * @param data The data to be written.
  * @return Standard hdf5 error condition.
  */
-template <typename T> inline herr_t replacePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t replacePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -837,7 +841,8 @@ template <typename T> inline herr_t replacePointerDataset(hid_t locationID, cons
  * For example if I create some data in a std::vector<UInt8Type> I would need to
  * pass H5T_NATIVE_UINT8 as the dataType.
  */
-template <typename T> inline herr_t writeVectorDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::vector<T>& data)
+template <typename T>
+inline herr_t writeVectorDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::vector<T>& data)
 {
   return writePointerDataset(locationID, datasetName, static_cast<int32_t>(dims.size()), dims.data(), data.data());
 }
@@ -1066,7 +1071,8 @@ inline herr_t writeVectorDatasetCompressed(hid_t locationID, const std::string& 
  * @param data The data to write to the file
  * @return Standard HDF5 error conditions
  */
-template <typename T, size_t _Size> inline herr_t writeArrayDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::array<T, _Size>& data)
+template <typename T, size_t _Size>
+inline herr_t writeArrayDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::array<T, _Size>& data)
 {
   return writePointerDataset(locationID, datasetName, static_cast<int32_t>(dims.size()), dims.data(), data.data());
 }
@@ -1081,7 +1087,8 @@ template <typename T, size_t _Size> inline herr_t writeArrayDataset(hid_t locati
  * @param value The value to write to the HDF5 dataset
  * @return Standard HDF5 error conditions
  */
-template <typename T> inline herr_t writeScalarDataset(hid_t locationID, const std::string& datasetName, const T& value)
+template <typename T>
+inline herr_t writeScalarDataset(hid_t locationID, const std::string& datasetName, const T& value)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1342,7 +1349,8 @@ inline herr_t writeVectorOfStringsDataset(hid_t locationID, const std::string& d
  * @param data The Attribute Data to write as a pointer
  * @return Standard HDF Error Condition
  */
-template <typename T> inline herr_t writePointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t writePointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, int32_t rank, const hsize_t* dims, const T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1657,7 +1665,8 @@ inline hsize_t getNumberOfElements(hid_t locationID, const std::string& datasetN
  * @param data The data to be written as the attribute
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T data)
+template <typename T>
+inline herr_t writeScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1758,7 +1767,8 @@ template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const
  * @param data A Pointer to the PreAllocated Array of Data
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t readPointerDataset(hid_t locationID, const std::string& datasetName, T* data)
+template <typename T>
+inline herr_t readPointerDataset(hid_t locationID, const std::string& datasetName, T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1818,7 +1828,8 @@ template <typename T> inline herr_t readPointerDataset(hid_t locationID, const s
  * will size it for you.
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t readVectorDataset(hid_t locationID, const std::string& datasetName, std::vector<T>& data)
+template <typename T>
+inline herr_t readVectorDataset(hid_t locationID, const std::string& datasetName, std::vector<T>& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1889,7 +1900,8 @@ template <typename T> inline herr_t readVectorDataset(hid_t locationID, const st
  * @param data The variable to store the data into
  * @return HDF error condition.
  */
-template <typename T> inline herr_t readScalarDataset(hid_t locationID, const std::string& datasetName, T& data)
+template <typename T>
+inline herr_t readScalarDataset(hid_t locationID, const std::string& datasetName, T& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -2248,7 +2260,8 @@ inline herr_t getAttributeInfo(hid_t locationID, const std::string& objectName, 
  * @param data The memory to store the data
  * @return Standard HDF Error condition
  */
-template <typename T> inline herr_t readVectorAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, std::vector<T>& data)
+template <typename T>
+inline herr_t readVectorAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, std::vector<T>& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -2322,7 +2335,8 @@ template <typename T> inline herr_t readVectorAttribute(hid_t locationID, const 
  * @param data The preallocated memory for the variable to be stored into
  * @return Standard HDF5 error condition
  */
-template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T& data)
+template <typename T>
+inline herr_t readScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -2387,7 +2401,8 @@ template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const 
  * @param data The preallocated memory for the variable to be stored into
  * @return Standard HDF5 error condition
  */
-template <typename T> inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T* data)
+template <typename T>
+inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
