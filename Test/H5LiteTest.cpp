@@ -862,27 +862,23 @@ public:
     H5SUPPORT_REQUIRE(error >= 0);
   }
 
-  template <typename T>
-  hid_t _testTypeName()
-  {
-    T v = 0x00;
-    return H5Lite::HDFTypeForPrimitive<T>(v);
-  }
-
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
   void TestTypeDetection()
   {
-    H5SUPPORT_REQUIRE_EQUAL(_testTypeName<int8_t>(), H5T_NATIVE_INT8)
-#if CMP_TYPE_CHAR_IS_SIGNED
-    H5SUPPORT_REQUIRE_EQUAL(_testTypeName<char>(), H5T_NATIVE_INT8)
-#else
-    H5SUPPORT_REQUIRE_EQUAL(_testTypeName<char>(), H5T_NATIVE_UINT8)
-#endif
-    H5SUPPORT_REQUIRE_EQUAL(_testTypeName<signed char>(), H5T_NATIVE_INT8)
-    H5SUPPORT_REQUIRE_EQUAL(_testTypeName<unsigned char>(), H5T_NATIVE_UINT8)
-    H5SUPPORT_REQUIRE_EQUAL(_testTypeName<uint8_t>(), H5T_NATIVE_UINT8)
+    H5SUPPORT_REQUIRE_EQUAL(H5Lite::HDFTypeForPrimitive<int8_t>(), H5T_NATIVE_INT8)
+    if constexpr(std::is_signed_v<char>)
+    {
+      H5SUPPORT_REQUIRE_EQUAL(H5Lite::HDFTypeForPrimitive<char>(), H5T_NATIVE_INT8)
+    }
+    else
+    {
+      H5SUPPORT_REQUIRE_EQUAL(H5Lite::HDFTypeForPrimitive<char>(), H5T_NATIVE_UINT8)
+    }
+    H5SUPPORT_REQUIRE_EQUAL(H5Lite::HDFTypeForPrimitive<signed char>(), H5T_NATIVE_INT8)
+    H5SUPPORT_REQUIRE_EQUAL(H5Lite::HDFTypeForPrimitive<unsigned char>(), H5T_NATIVE_UINT8)
+    H5SUPPORT_REQUIRE_EQUAL(H5Lite::HDFTypeForPrimitive<uint8_t>(), H5T_NATIVE_UINT8)
   }
 
   class WriteString

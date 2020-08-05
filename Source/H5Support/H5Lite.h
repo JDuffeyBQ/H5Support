@@ -475,12 +475,10 @@ inline std::string HDFTypeForPrimitiveAsStr(T value)
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return The HDF5 native type for the value
  */
 template <typename T>
-inline hid_t HDFTypeForPrimitive(T value)
+inline hid_t HDFTypeForPrimitive()
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -488,147 +486,62 @@ inline hid_t HDFTypeForPrimitive(T value)
   {
     return H5T_NATIVE_FLOAT;
   }
-  if constexpr(std::is_same_v<T, double>)
+  else if constexpr(std::is_same_v<T, double>)
   {
     return H5T_NATIVE_DOUBLE;
   }
-
-  if constexpr(std::is_same_v<T, int8_t>)
+  else if constexpr(std::is_same_v<T, int8_t>)
   {
     return H5T_NATIVE_INT8;
   }
-  if constexpr(std::is_same_v<T, uint8_t>)
+  else if constexpr(std::is_same_v<T, uint8_t>)
   {
     return H5T_NATIVE_UINT8;
   }
-#if CMP_TYPE_CHAR_IS_SIGNED
-  if constexpr(std::is_same_v<T, char>)
+  else if constexpr(std::is_same_v<T, char>)
   {
-    return H5T_NATIVE_INT8;
+    if constexpr(std::is_signed_v<char>)
+    {
+      return H5T_NATIVE_INT8;
+    }
+    else
+    {
+      return H5T_NATIVE_UINT8;
+    }
   }
-#else
-  if constexpr(std::is_same_v<T, char>)
-  {
-    return H5T_NATIVE_UINT8;
-  }
-#endif
-  if constexpr(std::is_same_v<T, signed char>)
-  {
-    return H5T_NATIVE_INT8;
-  }
-  if constexpr(std::is_same_v<T, unsigned char>)
-  {
-    return H5T_NATIVE_UINT8;
-  }
-
-  if constexpr(std::is_same_v<T, int16_t>)
+  else if constexpr(std::is_same_v<T, int16_t>)
   {
     return H5T_NATIVE_INT16;
   }
-  if constexpr(std::is_same_v<T, short>)
-  {
-    return H5T_NATIVE_INT16;
-  }
-  if constexpr(std::is_same_v<T, signed short>)
-  {
-    return H5T_NATIVE_INT16;
-  }
-  if constexpr(std::is_same_v<T, uint16_t>)
+  else if constexpr(std::is_same_v<T, uint16_t>)
   {
     return H5T_NATIVE_UINT16;
   }
-  if constexpr(std::is_same_v<T, unsigned short>)
-  {
-    return H5T_NATIVE_UINT16;
-  }
-
-  if constexpr(std::is_same_v<T, int32_t>)
+  else if constexpr(std::is_same_v<T, int32_t>)
   {
     return H5T_NATIVE_INT32;
   }
-  if constexpr(std::is_same_v<T, uint32_t>)
+  else if constexpr(std::is_same_v<T, uint32_t>)
   {
     return H5T_NATIVE_UINT32;
   }
-#if(CMP_SIZEOF_INT == 4)
-  if constexpr(std::is_same_v<T, int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, signed int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, unsigned int>)
-  {
-    return H5T_NATIVE_UINT32;
-  }
-#endif
-
-#if(CMP_SIZEOF_LONG == 4)
-  if constexpr(std::is_same_v<T, long int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, signed long int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, unsigned long int>)
-  {
-    return H5T_NATIVE_UINT32;
-  }
-#elif(CMP_SIZEOF_LONG == 8)
-  if constexpr(std::is_same_v<T, long int>)
+  else if constexpr(std::is_same_v<T, int64_t>)
   {
     return H5T_NATIVE_INT64;
   }
-  if constexpr(std::is_same_v<T, signed long int>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, unsigned long int>)
+  else if constexpr(std::is_same_v<T, uint64_t>)
   {
     return H5T_NATIVE_UINT64;
   }
-#endif
-
-#if(CMP_SIZEOF_LONG_LONG == 8)
-  if constexpr(std::is_same_v<T, long long int>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, signed long long int>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, unsigned long long int>)
-  {
-    return H5T_NATIVE_UINT64;
-  }
-#endif
-  if constexpr(std::is_same_v<T, int64_t>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, uint64_t>)
-  {
-    return H5T_NATIVE_UINT64;
-  }
-
-  if constexpr(std::is_same_v<T, bool>)
+  else if constexpr(std::is_same_v<T, bool>)
   {
     return H5T_NATIVE_UINT8;
   }
-
-  std::cout << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
-  const char* name = typeid(value).name();
-  if(nullptr != name && name[0] == 'l')
+  else
   {
-    std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t."
-              << std::endl;
+    static_assert("HDFTypeForPrimitive does not support this type");
+    return -1;
   }
-  return -1;
 }
 
 /**
@@ -690,7 +603,7 @@ inline herr_t writePointerDataset(hid_t locationID, const std::string& datasetNa
   {
     return -2;
   }
-  hid_t dataType = HDFTypeForPrimitive(data[0]);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -767,7 +680,7 @@ inline herr_t replacePointerDataset(hid_t locationID, const std::string& dataset
     return -2;
   }
 
-  hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
+  hid_t dataType = H5Lite::HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -941,7 +854,7 @@ inline herr_t writePointerDatasetCompressed(hid_t locationID, const std::string&
     return -100;
   }
 
-  hid_t dataType = HDFTypeForPrimitive(data[0]);
+  hid_t dataType = HDFTypeForPrimitive<T>();
 
   if(dataType == -1)
   {
@@ -1098,7 +1011,7 @@ inline herr_t writeScalarDataset(hid_t locationID, const std::string& datasetNam
   herr_t returnError = 0;
   hsize_t dims = 1;
   hid_t rank = 1;
-  hid_t dataType = HDFTypeForPrimitive(value);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -1359,8 +1272,7 @@ inline herr_t writePointerAttribute(hid_t locationID, const std::string& objectN
   H5O_info_t objectInfo;
   herr_t error = 0;
   herr_t returnError = 0;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     std::cout << "dataType was unknown" << std::endl;
@@ -1677,7 +1589,7 @@ inline herr_t writeScalarAttribute(hid_t locationID, const std::string& objectNa
   herr_t returnError = 0;
   hsize_t dims = 1;
   int32_t rank = 1;
-  hid_t dataType = HDFTypeForPrimitive(data);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -1775,9 +1687,7 @@ inline herr_t readPointerDataset(hid_t locationID, const std::string& datasetNam
   hid_t datasetID;
   herr_t error = 0;
   herr_t returnError = 0;
-  hid_t dataType = 0;
-  T test = 0x00;
-  dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     std::cout << "dataType was not supported." << std::endl;
@@ -1837,9 +1747,7 @@ inline herr_t readVectorDataset(hid_t locationID, const std::string& datasetName
   herr_t error = 0;
   herr_t returnError = 0;
   hid_t spaceId;
-  hid_t dataType;
-  T test = static_cast<T>(0x00);
-  dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -1910,7 +1818,7 @@ inline herr_t readScalarDataset(hid_t locationID, const std::string& datasetName
   herr_t returnError = 0;
   hid_t spaceId = 0;
 
-  hid_t dataType = HDFTypeForPrimitive(data);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -2272,8 +2180,7 @@ inline herr_t readVectorAttribute(hid_t locationID, const std::string& objectNam
   herr_t returnError = 0;
   hid_t attributeID;
   hid_t typeID;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -2346,8 +2253,7 @@ inline herr_t readScalarAttribute(hid_t locationID, const std::string& objectNam
   herr_t error = 0;
   herr_t returnError = 0;
   hid_t attributeID;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -2412,8 +2318,7 @@ inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectNa
   herr_t error = 0;
   herr_t returnError = 0;
   hid_t attributeID;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
