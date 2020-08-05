@@ -292,8 +292,6 @@ inline std::string StringForHDFClassType(H5T_class_t classType)
  */
 inline hid_t HDFTypeFromString(const std::string& value)
 {
-  H5SUPPORT_MUTEX_LOCK()
-
   if(value == "H5T_STRING")
   {
     return H5T_STRING;
