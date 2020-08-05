@@ -433,7 +433,8 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T, typename K> void require_equal(T l, const std::string& L, K r, const std::string& R, const std::string file = "", int line = 0)
+template <typename T, typename K>
+void require_equal(T l, const std::string& L, K r, const std::string& R, const std::string file = "", int line = 0)
 {
   if(l != r)
   {
@@ -448,7 +449,8 @@ template <typename T, typename K> void require_equal(T l, const std::string& L, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T, typename K> void require_less_than(T l, const std::string& L, K r, const std::string& R, const std::string file = "", int line = 0)
+template <typename T, typename K>
+void require_less_than(T l, const std::string& L, K r, const std::string& R, const std::string file = "", int line = 0)
 {
   if(l >= r)
   {
@@ -463,7 +465,8 @@ template <typename T, typename K> void require_less_than(T l, const std::string&
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T, typename K> void require_greater_than(T l, const std::string& L, K r, const std::string& R, const std::string file = "", int line = 0)
+template <typename T, typename K>
+void require_greater_than(T l, const std::string& L, K r, const std::string& R, const std::string file = "", int line = 0)
 {
   if(l <= r)
   {

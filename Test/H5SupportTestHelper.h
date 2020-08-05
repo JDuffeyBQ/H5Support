@@ -67,16 +67,16 @@ constexpr size_t rank3D = 3;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
     (*attributesWritten)++;
   }
 
-  T value = 0x0;
   herr_t error = -1;
-  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
   H5SUPPORT_REQUIRE(attributeKey.empty() == false);
   attributeKey = "1DArrayAttribute<" + attributeKey + ">";
   std::array<T, Constants::dim0> data;
@@ -93,7 +93,8 @@ template <typename T> herr_t testWritePointer1DArrayAttribute(hid_t file_id, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer2DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer2DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -101,9 +102,8 @@ template <typename T> herr_t testWritePointer2DArrayAttribute(hid_t file_id, con
   }
 
   // std::cout << DEBUG_OUT(logTime) << "testWritePointer2DArrayAttribute";
-  T value = 0x0;
   herr_t error = -1;
-  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
   H5SUPPORT_REQUIRE(attributeKey.empty() == false);
 
   attributeKey = "2DArrayAttribute<" + attributeKey + ">";
@@ -130,16 +130,16 @@ template <typename T> herr_t testWritePointer2DArrayAttribute(hid_t file_id, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer3DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer3DArrayAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
     (*attributesWritten)++;
   }
 
-  T value = 0x0;
   herr_t error = -1;
-  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
   H5SUPPORT_REQUIRE(attributeKey.empty() == false);
   attributeKey = "3DArrayAttribute<" + attributeKey + ">";
 
@@ -168,16 +168,16 @@ template <typename T> herr_t testWritePointer3DArrayAttribute(hid_t file_id, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWriteVectorAttribute(hid_t file_id, std::string dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWriteVectorAttribute(hid_t file_id, std::string dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
     (*attributesWritten)++;
   }
 
-  T value = 0x0;
   herr_t error = -1;
-  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
   H5SUPPORT_REQUIRE(attributeKey.empty() == false);
   attributeKey = "VectorAttribute<" + attributeKey + ">";
 
@@ -198,7 +198,8 @@ template <typename T> herr_t testWriteVectorAttribute(hid_t file_id, std::string
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWriteScalarAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWriteScalarAttribute(hid_t file_id, const std::string& dsetName, int32_t* attributesWritten = nullptr)
 {
   if(attributesWritten != nullptr)
   {
@@ -207,7 +208,7 @@ template <typename T> herr_t testWriteScalarAttribute(hid_t file_id, const std::
 
   T value = 0x0F;
   herr_t error = -1;
-  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
   H5SUPPORT_REQUIRE(attributeKey.empty() == false);
   attributeKey = "ScalarAttribute<" + attributeKey + ">";
   error = H5Lite::writeScalarAttribute(file_id, dsetName, attributeKey, value);
@@ -218,9 +219,9 @@ template <typename T> herr_t testWriteScalarAttribute(hid_t file_id, const std::
 // -----------------------------------------------------------------------------
 //  Uses Raw Pointers to save data to the data file
 // -----------------------------------------------------------------------------
-template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32_t* attributesWritten = nullptr)
+template <typename T>
+herr_t testWritePointer2DArrayDataset(hid_t file_id, int32_t* attributesWritten = nullptr)
 {
-  T value = 0x0;
   herr_t error = 1;
   // Create the Dimensions
   std::array<hsize_t, 2> dims = {Constants::dim0, Constants::dim1};
@@ -232,7 +233,7 @@ template <typename T> herr_t testWritePointer2DArrayDataset(hid_t file_id, int32
     data[i] = static_cast<T>(i) * static_cast<T>(5);
   }
 
-  std::string dsetName = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string dsetName = H5Lite::HDFTypeForPrimitiveAsStr<T>();
   dsetName = "Pointer2DArrayDataset<" + dsetName + ">";
   std::cout << "Running " << dsetName << " ... " << '\n';
   error = H5Lite::writePointerDataset(file_id, dsetName, static_cast<int32_t>(dims.size()), dims.data(), data.data());

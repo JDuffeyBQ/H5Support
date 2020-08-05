@@ -124,24 +124,22 @@ inline QString StringForHDFType(hid_t type)
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return A QString representing the HDF5 Type
  */
-template <typename T> inline QString HDFTypeForPrimitiveAsStr(T value)
+template <typename T>
+inline QString HDFTypeForPrimitiveAsStr()
 {
-  return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
+  return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr<T>());
 }
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return The HDF5 native type for the value
  */
-template <typename T> inline hid_t HDFTypeForPrimitive(T value)
+template <typename T>
+inline hid_t HDFTypeForPrimitive()
 {
-  return H5Lite::HDFTypeForPrimitive(value);
+  return H5Lite::HDFTypeForPrimitive<T>();
 }
 
 /**
@@ -196,7 +194,8 @@ inline bool datasetExists(hid_t locationID, const QString& name)
  * are trying to write a data set that has more than 2^31 elements then use the H5Lite::writeVectorDataset()
  * instead which takes a std::vector() and is probably more suited for large data.
  */
-template <typename T> inline herr_t writeVectorDataset(hid_t locationID, const QString& datasetName, const QVector<hsize_t>& dims, const QVector<T>& data)
+template <typename T>
+inline herr_t writeVectorDataset(hid_t locationID, const QString& datasetName, const QVector<hsize_t>& dims, const QVector<T>& data)
 {
   return H5Lite::writePointerDataset(locationID, datasetName.toStdString(), dims.size(), dims.data(), data.data());
 }
@@ -262,7 +261,8 @@ inline herr_t writeVectorDatasetCompressed(hid_t locationID, const QString& data
  * @param data The data to be written.
  * @return Standard hdf5 error condition.
  */
-template <typename T> inline herr_t writePointerDataset(hid_t locationID, const QString& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t writePointerDataset(hid_t locationID, const QString& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   return H5Lite::writePointerDataset(locationID, datasetName.toStdString(), rank, dims, data);
 }
@@ -276,7 +276,8 @@ template <typename T> inline herr_t writePointerDataset(hid_t locationID, const 
  * @param data The data to be written.
  * @return Standard hdf5 error condition.
  */
-template <typename T> inline herr_t replacePointerDataset(hid_t locationID, const QString& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t replacePointerDataset(hid_t locationID, const QString& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   return H5Lite::replacePointerDataset(locationID, datasetName.toStdString(), rank, dims, data);
 }
@@ -291,7 +292,8 @@ template <typename T> inline herr_t replacePointerDataset(hid_t locationID, cons
  * @param value The value to write to the HDF5 dataset
  * @return Standard HDF5 error conditions
  */
-template <typename T> inline herr_t writeScalarDataset(hid_t locationID, const QString& datasetName, T& value)
+template <typename T>
+inline herr_t writeScalarDataset(hid_t locationID, const QString& datasetName, T& value)
 {
   return H5Lite::writeScalarDataset(locationID, datasetName.toStdString(), value);
 }
@@ -395,7 +397,8 @@ inline herr_t writeVectorOfStringsDataset(hid_t locationID, const QString& datas
  * @param data The Attribute Data to write as a pointer
  * @return Standard HDF Error Condition
  */
-template <typename T> inline herr_t writePointerAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t writePointerAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, int32_t rank, const hsize_t* dims, const T* data)
 {
   return H5Lite::writePointerAttribute(locationID, objectName.toStdString(), attributeName.toStdString(), rank, dims, data);
 }
@@ -410,7 +413,8 @@ template <typename T> inline herr_t writePointerAttribute(hid_t locationID, cons
  * @return Standard HDF Error Condition
  *
  */
-template <typename T> inline herr_t writeVectorAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, const QVector<hsize_t>& dims, const QVector<T>& data)
+template <typename T>
+inline herr_t writeVectorAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, const QVector<hsize_t>& dims, const QVector<T>& data)
 {
   return H5Lite::writePointerAttribute(locationID, objectName.toStdString(), attributeName.toStdString(), dims.size(), dims.data(), data.data());
 }
@@ -490,7 +494,8 @@ inline hsize_t getNumberOfElements(hid_t locationID, const QString& datasetName)
  * @param data The data to be written as the attribute
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, T data)
+template <typename T>
+inline herr_t writeScalarAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, T data)
 {
   return H5Lite::writeScalarAttribute(locationID, objectName.toStdString(), attributeName.toStdString(), data);
 }
@@ -502,7 +507,8 @@ template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const
  * @param data A Pointer to the PreAllocated Array of Data
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t readPointerDataset(hid_t locationID, const QString& datasetName, T* data)
+template <typename T>
+inline herr_t readPointerDataset(hid_t locationID, const QString& datasetName, T* data)
 {
   return H5Lite::readPointerDataset(locationID, datasetName.toStdString(), data);
 }
@@ -541,7 +547,8 @@ inline herr_t getDatasetInfo(hid_t locationID, const QString& datasetName, QVect
  * will size it for you.
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t readVectorDataset(hid_t locationID, const QString& datasetName, std::vector<T>& data)
+template <typename T>
+inline herr_t readVectorDataset(hid_t locationID, const QString& datasetName, std::vector<T>& data)
 {
   std::string dsetNameStr = datasetName.toStdString();
   herr_t err = H5Lite::readVectorDataset(locationID, dsetNameStr, data);
@@ -555,7 +562,8 @@ template <typename T> inline herr_t readVectorDataset(hid_t locationID, const QS
  * @param data The variable to store the data into
  * @return HDF error condition.
  */
-template <typename T> inline herr_t readScalarDataset(hid_t locationID, const QString& datasetName, T& data)
+template <typename T>
+inline herr_t readScalarDataset(hid_t locationID, const QString& datasetName, T& data)
 {
   std::string datasetNameStr = datasetName.toStdString();
   herr_t error = H5Lite::readScalarDataset(locationID, datasetNameStr, data);
@@ -718,7 +726,8 @@ inline herr_t getAttributeInfo(hid_t locationID, const QString& objectName, cons
  * @param data The memory to store the data
  * @return Standard HDF Error condition
  */
-template <typename T> inline herr_t readVectorAttribute(hid_t loc_id, const QString& objName, const QString& attrName, std::vector<T>& data)
+template <typename T>
+inline herr_t readVectorAttribute(hid_t loc_id, const QString& objName, const QString& attrName, std::vector<T>& data)
 {
 
   std::string objNameStr = objName.toStdString();
@@ -738,7 +747,8 @@ template <typename T> inline herr_t readVectorAttribute(hid_t loc_id, const QStr
  * @param data The preallocated memory for the variable to be stored into
  * @return Standard HDF5 error condition
  */
-template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, T& data)
+template <typename T>
+inline herr_t readScalarAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, T& data)
 {
   std::string objectNameStr = objectName.toStdString();
   std::string attributeNameStr = attributeName.toStdString();
@@ -754,7 +764,8 @@ template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const 
  * @param data The preallocated memory for the variable to be stored into
  * @return Standard HDF5 error condition
  */
-template <typename T> inline herr_t readPointerAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, T* data)
+template <typename T>
+inline herr_t readPointerAttribute(hid_t locationID, const QString& objectName, const QString& attributeName, T* data)
 {
   std::string objectNameStr = objectName.toStdString();
   std::string attributeNameStr = attributeName.toStdString();

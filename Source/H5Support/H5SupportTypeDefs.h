@@ -7,4 +7,3 @@
  * the code is just using hid_t.
  */
 using hid_t = int64_t;
-

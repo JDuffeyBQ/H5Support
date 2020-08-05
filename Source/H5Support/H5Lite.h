@@ -60,6 +60,12 @@
 namespace H5Lite
 {
 
+namespace detail
+{
+template <class...>
+inline constexpr std::false_type always_false = {};
+} // namespace detail
+
 constexpr size_t k_ChunkBase = 16 * 1024;
 constexpr size_t k_ChunkMin = 8 * 1024;
 constexpr size_t k_ChunkMax = 1024 * 1024;
@@ -292,8 +298,6 @@ inline std::string StringForHDFClassType(H5T_class_t classType)
  */
 inline hid_t HDFTypeFromString(const std::string& value)
 {
-  H5SUPPORT_MUTEX_LOCK()
-
   if(value == "H5T_STRING")
   {
     return H5T_STRING;
@@ -413,72 +417,64 @@ inline std::string StringForHDFType(hid_t dataTypeIdentifier)
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return A std::string representing the HDF5 Type
  */
-template <typename T> inline std::string HDFTypeForPrimitiveAsStr(T value)
+template <typename T>
+inline std::string HDFTypeForPrimitiveAsStr()
 {
-  H5SUPPORT_MUTEX_LOCK()
-
   if constexpr(std::is_same_v<T, int8_t>)
   {
     return "H5T_NATIVE_INT8";
   }
-  if constexpr(std::is_same_v<T, uint8_t>)
+  else if constexpr(std::is_same_v<T, uint8_t>)
   {
     return "H5T_NATIVE_UINT8";
   }
-
-  if constexpr(std::is_same_v<T, int16_t>)
+  else if constexpr(std::is_same_v<T, int16_t>)
   {
     return "H5T_NATIVE_INT16";
   }
-  if constexpr(std::is_same_v<T, uint16_t>)
+  else if constexpr(std::is_same_v<T, uint16_t>)
   {
     return "H5T_NATIVE_UINT16";
   }
-
-  if constexpr(std::is_same_v<T, int32_t>)
+  else if constexpr(std::is_same_v<T, int32_t>)
   {
     return "H5T_NATIVE_INT32";
   }
-  if constexpr(std::is_same_v<T, uint32_t>)
+  else if constexpr(std::is_same_v<T, uint32_t>)
   {
     return "H5T_NATIVE_UINT32";
   }
-
-  if constexpr(std::is_same_v<T, int64_t>)
+  else if constexpr(std::is_same_v<T, int64_t>)
   {
     return "H5T_NATIVE_INT64";
   }
-  if constexpr(std::is_same_v<T, uint64_t>)
+  else if constexpr(std::is_same_v<T, uint64_t>)
   {
     return "H5T_NATIVE_UINT64";
   }
-
-  if constexpr(std::is_same_v<T, float>)
+  else if constexpr(std::is_same_v<T, float>)
   {
     return "H5T_NATIVE_FLOAT";
   }
-  if constexpr(std::is_same_v<T, double>)
+  else if constexpr(std::is_same_v<T, double>)
   {
     return "H5T_NATIVE_DOUBLE";
   }
-
-  // if (typeid(value) == typeid(bool)) return "H5T_NATIVE_UINT8";
-
-  std::cout << "Error: HDFTypeForPrimitiveAsStr - Unknown Type: " << typeid(value).name() << std::endl;
-  return "";
+  else
+  {
+    static_assert(detail::always_false<T>, "HDFTypeForPrimitiveAsStr does not support this type");
+    return "";
+  }
 }
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return The HDF5 native type for the value
  */
-template <typename T> inline hid_t HDFTypeForPrimitive(T value)
+template <typename T>
+inline hid_t HDFTypeForPrimitive()
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -486,147 +482,66 @@ template <typename T> inline hid_t HDFTypeForPrimitive(T value)
   {
     return H5T_NATIVE_FLOAT;
   }
-  if constexpr(std::is_same_v<T, double>)
+  else if constexpr(std::is_same_v<T, double>)
   {
     return H5T_NATIVE_DOUBLE;
   }
-
-  if constexpr(std::is_same_v<T, int8_t>)
+  else if constexpr(std::is_same_v<T, int8_t>)
   {
     return H5T_NATIVE_INT8;
   }
-  if constexpr(std::is_same_v<T, uint8_t>)
+  else if constexpr(std::is_same_v<T, uint8_t>)
   {
     return H5T_NATIVE_UINT8;
   }
-#if CMP_TYPE_CHAR_IS_SIGNED
-  if constexpr(std::is_same_v<T, char>)
+  else if constexpr(std::is_same_v<T, char>)
   {
-    return H5T_NATIVE_INT8;
+    if constexpr(std::is_signed_v<char>)
+    {
+      return H5T_NATIVE_INT8;
+    }
+    else
+    {
+      return H5T_NATIVE_UINT8;
+    }
   }
-#else
-  if constexpr(std::is_same_v<T, char>)
-  {
-    return H5T_NATIVE_UINT8;
-  }
-#endif
-  if constexpr(std::is_same_v<T, signed char>)
-  {
-    return H5T_NATIVE_INT8;
-  }
-  if constexpr(std::is_same_v<T, unsigned char>)
-  {
-    return H5T_NATIVE_UINT8;
-  }
-
-  if constexpr(std::is_same_v<T, int16_t>)
+  else if constexpr(std::is_same_v<T, int16_t>)
   {
     return H5T_NATIVE_INT16;
   }
-  if constexpr(std::is_same_v<T, short>)
-  {
-    return H5T_NATIVE_INT16;
-  }
-  if constexpr(std::is_same_v<T, signed short>)
-  {
-    return H5T_NATIVE_INT16;
-  }
-  if constexpr(std::is_same_v<T, uint16_t>)
+  else if constexpr(std::is_same_v<T, uint16_t>)
   {
     return H5T_NATIVE_UINT16;
   }
-  if constexpr(std::is_same_v<T, unsigned short>)
-  {
-    return H5T_NATIVE_UINT16;
-  }
-
-  if constexpr(std::is_same_v<T, int32_t>)
+  else if constexpr(std::is_same_v<T, int32_t>)
   {
     return H5T_NATIVE_INT32;
   }
-  if constexpr(std::is_same_v<T, uint32_t>)
+  else if constexpr(std::is_same_v<T, uint32_t>)
   {
     return H5T_NATIVE_UINT32;
   }
-#if(CMP_SIZEOF_INT == 4)
-  if constexpr(std::is_same_v<T, int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, signed int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, unsigned int>)
-  {
-    return H5T_NATIVE_UINT32;
-  }
-#endif
-
-#if(CMP_SIZEOF_LONG == 4)
-  if constexpr(std::is_same_v<T, long int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, signed long int>)
-  {
-    return H5T_NATIVE_INT32;
-  }
-  if constexpr(std::is_same_v<T, unsigned long int>)
-  {
-    return H5T_NATIVE_UINT32;
-  }
-#elif(CMP_SIZEOF_LONG == 8)
-  if constexpr(std::is_same_v<T, long int>)
+  else if constexpr(std::is_same_v<T, int64_t>)
   {
     return H5T_NATIVE_INT64;
   }
-  if constexpr(std::is_same_v<T, signed long int>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, unsigned long int>)
+  else if constexpr(std::is_same_v<T, uint64_t>)
   {
     return H5T_NATIVE_UINT64;
   }
-#endif
-
-#if(CMP_SIZEOF_LONG_LONG == 8)
-  if constexpr(std::is_same_v<T, long long int>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, signed long long int>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, unsigned long long int>)
-  {
-    return H5T_NATIVE_UINT64;
-  }
-#endif
-  if constexpr(std::is_same_v<T, int64_t>)
-  {
-    return H5T_NATIVE_INT64;
-  }
-  if constexpr(std::is_same_v<T, uint64_t>)
-  {
-    return H5T_NATIVE_UINT64;
-  }
-
-  if constexpr(std::is_same_v<T, bool>)
+  else if constexpr(std::is_same_v<T, bool>)
   {
     return H5T_NATIVE_UINT8;
   }
-
-  std::cout << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
-  const char* name = typeid(value).name();
-  if(nullptr != name && name[0] == 'l')
+  else if constexpr(std::is_same_v<T, size_t>)
   {
-    std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t."
-              << std::endl;
+    return H5T_NATIVE_UINT64;
   }
-  return -1;
+  else
+  {
+    static_assert(detail::always_false<T>, "HDFTypeForPrimitive does not support this type");
+    return -1;
+  }
 }
 
 /**
@@ -674,7 +589,8 @@ inline bool datasetExists(hid_t locationID, const std::string& datasetName)
  * @param data The data to be written.
  * @return Standard hdf5 error condition.
  */
-template <typename T> inline herr_t writePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t writePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -687,7 +603,7 @@ template <typename T> inline herr_t writePointerDataset(hid_t locationID, const 
   {
     return -2;
   }
-  hid_t dataType = HDFTypeForPrimitive(data[0]);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -749,7 +665,8 @@ template <typename T> inline herr_t writePointerDataset(hid_t locationID, const 
  * @param data The data to be written.
  * @return Standard hdf5 error condition.
  */
-template <typename T> inline herr_t replacePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t replacePointerDataset(hid_t locationID, const std::string& datasetName, int32_t rank, const hsize_t* dims, const T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -763,7 +680,7 @@ template <typename T> inline herr_t replacePointerDataset(hid_t locationID, cons
     return -2;
   }
 
-  hid_t dataType = H5Lite::HDFTypeForPrimitive(data[0]);
+  hid_t dataType = H5Lite::HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -837,7 +754,8 @@ template <typename T> inline herr_t replacePointerDataset(hid_t locationID, cons
  * For example if I create some data in a std::vector<UInt8Type> I would need to
  * pass H5T_NATIVE_UINT8 as the dataType.
  */
-template <typename T> inline herr_t writeVectorDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::vector<T>& data)
+template <typename T>
+inline herr_t writeVectorDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::vector<T>& data)
 {
   return writePointerDataset(locationID, datasetName, static_cast<int32_t>(dims.size()), dims.data(), data.data());
 }
@@ -936,7 +854,7 @@ inline herr_t writePointerDatasetCompressed(hid_t locationID, const std::string&
     return -100;
   }
 
-  hid_t dataType = HDFTypeForPrimitive(data[0]);
+  hid_t dataType = HDFTypeForPrimitive<T>();
 
   if(dataType == -1)
   {
@@ -1066,7 +984,8 @@ inline herr_t writeVectorDatasetCompressed(hid_t locationID, const std::string& 
  * @param data The data to write to the file
  * @return Standard HDF5 error conditions
  */
-template <typename T, size_t _Size> inline herr_t writeArrayDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::array<T, _Size>& data)
+template <typename T, size_t _Size>
+inline herr_t writeArrayDataset(hid_t locationID, const std::string& datasetName, const std::vector<hsize_t>& dims, const std::array<T, _Size>& data)
 {
   return writePointerDataset(locationID, datasetName, static_cast<int32_t>(dims.size()), dims.data(), data.data());
 }
@@ -1081,7 +1000,8 @@ template <typename T, size_t _Size> inline herr_t writeArrayDataset(hid_t locati
  * @param value The value to write to the HDF5 dataset
  * @return Standard HDF5 error conditions
  */
-template <typename T> inline herr_t writeScalarDataset(hid_t locationID, const std::string& datasetName, const T& value)
+template <typename T>
+inline herr_t writeScalarDataset(hid_t locationID, const std::string& datasetName, const T& value)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1091,7 +1011,7 @@ template <typename T> inline herr_t writeScalarDataset(hid_t locationID, const s
   herr_t returnError = 0;
   hsize_t dims = 1;
   hid_t rank = 1;
-  hid_t dataType = HDFTypeForPrimitive(value);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -1342,7 +1262,8 @@ inline herr_t writeVectorOfStringsDataset(hid_t locationID, const std::string& d
  * @param data The Attribute Data to write as a pointer
  * @return Standard HDF Error Condition
  */
-template <typename T> inline herr_t writePointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, int32_t rank, const hsize_t* dims, const T* data)
+template <typename T>
+inline herr_t writePointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, int32_t rank, const hsize_t* dims, const T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1351,8 +1272,7 @@ template <typename T> inline herr_t writePointerAttribute(hid_t locationID, cons
   H5O_info_t objectInfo;
   herr_t error = 0;
   herr_t returnError = 0;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     std::cout << "dataType was unknown" << std::endl;
@@ -1657,7 +1577,8 @@ inline hsize_t getNumberOfElements(hid_t locationID, const std::string& datasetN
  * @param data The data to be written as the attribute
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T data)
+template <typename T>
+inline herr_t writeScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1668,7 +1589,7 @@ template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const
   herr_t returnError = 0;
   hsize_t dims = 1;
   int32_t rank = 1;
-  hid_t dataType = HDFTypeForPrimitive(data);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -1758,16 +1679,15 @@ template <typename T> inline herr_t writeScalarAttribute(hid_t locationID, const
  * @param data A Pointer to the PreAllocated Array of Data
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t readPointerDataset(hid_t locationID, const std::string& datasetName, T* data)
+template <typename T>
+inline herr_t readPointerDataset(hid_t locationID, const std::string& datasetName, T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
   hid_t datasetID;
   herr_t error = 0;
   herr_t returnError = 0;
-  hid_t dataType = 0;
-  T test = 0x00;
-  dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     std::cout << "dataType was not supported." << std::endl;
@@ -1818,7 +1738,8 @@ template <typename T> inline herr_t readPointerDataset(hid_t locationID, const s
  * will size it for you.
  * @return Standard HDF error condition
  */
-template <typename T> inline herr_t readVectorDataset(hid_t locationID, const std::string& datasetName, std::vector<T>& data)
+template <typename T>
+inline herr_t readVectorDataset(hid_t locationID, const std::string& datasetName, std::vector<T>& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1826,9 +1747,7 @@ template <typename T> inline herr_t readVectorDataset(hid_t locationID, const st
   herr_t error = 0;
   herr_t returnError = 0;
   hid_t spaceId;
-  hid_t dataType;
-  T test = static_cast<T>(0x00);
-  dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -1889,7 +1808,8 @@ template <typename T> inline herr_t readVectorDataset(hid_t locationID, const st
  * @param data The variable to store the data into
  * @return HDF error condition.
  */
-template <typename T> inline herr_t readScalarDataset(hid_t locationID, const std::string& datasetName, T& data)
+template <typename T>
+inline herr_t readScalarDataset(hid_t locationID, const std::string& datasetName, T& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -1898,7 +1818,7 @@ template <typename T> inline herr_t readScalarDataset(hid_t locationID, const st
   herr_t returnError = 0;
   hid_t spaceId = 0;
 
-  hid_t dataType = HDFTypeForPrimitive(data);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -2248,7 +2168,8 @@ inline herr_t getAttributeInfo(hid_t locationID, const std::string& objectName, 
  * @param data The memory to store the data
  * @return Standard HDF Error condition
  */
-template <typename T> inline herr_t readVectorAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, std::vector<T>& data)
+template <typename T>
+inline herr_t readVectorAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, std::vector<T>& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -2259,8 +2180,7 @@ template <typename T> inline herr_t readVectorAttribute(hid_t locationID, const 
   herr_t returnError = 0;
   hid_t attributeID;
   hid_t typeID;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -2315,6 +2235,49 @@ template <typename T> inline herr_t readVectorAttribute(hid_t locationID, const 
 }
 
 /**
+ * @brief Reads a scalar attribute value from an object
+ * @param locationID
+ * @param attributeName The name of the Attribute
+ * @param data The preallocated memory for the variable to be stored into
+ * @return Standard HDF5 error condition
+ */
+template <typename T>
+inline herr_t readScalarAttribute(hid_t locationID, const std::string& attributeName, T& data)
+{
+  H5SUPPORT_MUTEX_LOCK()
+
+  herr_t returnError = 0;
+  hid_t dataType = HDFTypeForPrimitive<T>();
+  if(dataType == -1)
+  {
+    return -1;
+  }
+
+  hid_t attributeID = H5Aopen(locationID, attributeName.c_str(), H5P_DEFAULT);
+  if(attributeID >= 0)
+  {
+    herr_t error = H5Aread(attributeID, dataType, &data);
+    if(error < 0)
+    {
+      std::cout << "Error Reading Attribute." << std::endl;
+      returnError = error;
+    }
+    error = H5Aclose(attributeID);
+    if(error < 0)
+    {
+      std::cout << "Error Closing Attribute" << std::endl;
+      returnError = error;
+    }
+  }
+  else
+  {
+    returnError = static_cast<herr_t>(attributeID);
+  }
+
+  return returnError;
+}
+
+/**
  * @brief Reads a scalar attribute value from a dataset
  * @param locationID
  * @param objectName The name of the dataset
@@ -2322,7 +2285,8 @@ template <typename T> inline herr_t readVectorAttribute(hid_t locationID, const 
  * @param data The preallocated memory for the variable to be stored into
  * @return Standard HDF5 error condition
  */
-template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T& data)
+template <typename T>
+inline herr_t readScalarAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T& data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -2332,8 +2296,7 @@ template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const 
   herr_t error = 0;
   herr_t returnError = 0;
   hid_t attributeID;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
@@ -2387,7 +2350,8 @@ template <typename T> inline herr_t readScalarAttribute(hid_t locationID, const 
  * @param data The preallocated memory for the variable to be stored into
  * @return Standard HDF5 error condition
  */
-template <typename T> inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T* data)
+template <typename T>
+inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectName, const std::string& attributeName, T* data)
 {
   H5SUPPORT_MUTEX_LOCK()
 
@@ -2397,8 +2361,7 @@ template <typename T> inline herr_t readPointerAttribute(hid_t locationID, const
   herr_t error = 0;
   herr_t returnError = 0;
   hid_t attributeID;
-  T test = 0x00;
-  hid_t dataType = HDFTypeForPrimitive(test);
+  hid_t dataType = HDFTypeForPrimitive<T>();
   if(dataType == -1)
   {
     return -1;
