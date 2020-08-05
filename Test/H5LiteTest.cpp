@@ -112,10 +112,9 @@ public:
   template <typename T>
   herr_t testReadPointer1DArrayAttribute(hid_t fileID, const std::string& datasetName)
   {
-    T value = 0x0;
     herr_t error = -1;
     herr_t returnError = error;
-    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     H5SUPPORT_REQUIRE(attributeKey.empty() == false);
     attributeKey = "1DArrayAttribute<" + attributeKey + ">";
     std::vector<T> referenceData(H5SupportTestHelper::Constants::dim0, 0);
@@ -154,10 +153,9 @@ public:
   template <typename T>
   herr_t testReadPointer2DArrayAttribute(hid_t fileID, const std::string& datasetName)
   {
-    T value = 0x0;
     herr_t error = -1;
     herr_t returnError = error;
-    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     H5SUPPORT_REQUIRE(attributeKey.empty() == false);
     attributeKey = "2DArrayAttribute<" + attributeKey + ">";
 
@@ -201,10 +199,9 @@ public:
   template <typename T>
   herr_t testReadPointer3DArrayAttribute(hid_t fileID, const std::string& datasetName)
   {
-    T value = 0x0;
     herr_t error = -1;
     herr_t returnError = error;
-    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     H5SUPPORT_REQUIRE(attributeKey.empty() == false);
     attributeKey = "3DArrayAttribute<" + attributeKey + ">";
 
@@ -250,9 +247,8 @@ public:
   template <typename T>
   herr_t testReadVectorAttribute(hid_t fileID, std::string datasetName)
   {
-    T value = 0x0;
     herr_t error = -1;
-    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     H5SUPPORT_REQUIRE(attributeKey.empty() == false);
     attributeKey = "VectorAttribute<" + attributeKey + ">";
 
@@ -280,7 +276,7 @@ public:
     T value = 0x0F;
     T refValue = value;
     herr_t error = -1;
-    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     H5SUPPORT_REQUIRE(attributeKey.empty() == false);
     attributeKey = "ScalarAttribute<" + attributeKey + ">";
 
@@ -296,7 +292,6 @@ public:
   template <typename T>
   herr_t testWriteVectorDataset(hid_t fileID)
   {
-    T value = 0x0;
     herr_t error = 1;
 
     std::vector<hsize_t> dims(H5SupportTestHelper::Constants::rank1D, H5SupportTestHelper::Constants::dim0);
@@ -307,7 +302,7 @@ public:
       data[i] = static_cast<T>(i) * static_cast<T>(5);
     }
 
-    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     datasetName = "VectorDataset<" + datasetName + ">";
     std::cout << "Running " << datasetName << " ... " << '\n';
     error = H5Lite::writeVectorDataset<T>(fileID, datasetName, dims, data);
@@ -324,7 +319,6 @@ public:
   template <typename T>
   herr_t testReadVectorDataset(hid_t fileID)
   {
-    T value = 0x0;
     herr_t error = 1;
 
     std::vector<hsize_t> dims(H5SupportTestHelper::Constants::rank1D, H5SupportTestHelper::Constants::dim0);
@@ -334,7 +328,7 @@ public:
       referenceData[i] = static_cast<T>(i) * static_cast<T>(5);
     }
 
-    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     std::cout << "Running testReadVectorDataset <" + datasetName + "> ... " << '\n';
     datasetName = "VectorDataset<" + datasetName + ">";
 
@@ -357,7 +351,7 @@ public:
     T value = 0x0F;
     herr_t error = 1;
 
-    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     datasetName = "ScalarDataset<" + datasetName + ">";
     std::cout << "Running " << datasetName << " ... " << '\n';
     error = H5Lite::writeScalarDataset(fileID, datasetName, value);
@@ -384,7 +378,7 @@ public:
     T refValue = value;
     herr_t error = 1;
 
-    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr<T>(value);
+    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     std::cout << "Running testReadScalarDataset <" + datasetName + "> ... " << '\n';
     datasetName = "ScalarDataset<" + datasetName + ">";
 
@@ -529,7 +523,6 @@ public:
   herr_t testReadPointer2DArrayDataset(hid_t fileID)
   {
     // Create the reference data
-    T value = 0x0;
     herr_t error = 1;
     std::vector<hsize_t> dims{H5SupportTestHelper::Constants::dim0, H5SupportTestHelper::Constants::dim1};
 
@@ -540,7 +533,7 @@ public:
       referenceData[i] = static_cast<T>(i) * static_cast<T>(5);
     }
     // Generate the data set name
-    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr(value);
+    std::string datasetName = H5Lite::HDFTypeForPrimitiveAsStr<T>();
     std::cout << "Running testReadPointer2DArrayDataset<" << datasetName << "> ... " << '\n';
     datasetName = "Pointer2DArrayDataset<" + datasetName + ">";
 

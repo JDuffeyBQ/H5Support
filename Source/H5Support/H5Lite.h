@@ -413,64 +413,56 @@ inline std::string StringForHDFType(hid_t dataTypeIdentifier)
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return A std::string representing the HDF5 Type
  */
 template <typename T>
-inline std::string HDFTypeForPrimitiveAsStr(T value)
+inline std::string HDFTypeForPrimitiveAsStr()
 {
-  H5SUPPORT_MUTEX_LOCK()
-
   if constexpr(std::is_same_v<T, int8_t>)
   {
     return "H5T_NATIVE_INT8";
   }
-  if constexpr(std::is_same_v<T, uint8_t>)
+  else if constexpr(std::is_same_v<T, uint8_t>)
   {
     return "H5T_NATIVE_UINT8";
   }
-
-  if constexpr(std::is_same_v<T, int16_t>)
+  else if constexpr(std::is_same_v<T, int16_t>)
   {
     return "H5T_NATIVE_INT16";
   }
-  if constexpr(std::is_same_v<T, uint16_t>)
+  else if constexpr(std::is_same_v<T, uint16_t>)
   {
     return "H5T_NATIVE_UINT16";
   }
-
-  if constexpr(std::is_same_v<T, int32_t>)
+  else if constexpr(std::is_same_v<T, int32_t>)
   {
     return "H5T_NATIVE_INT32";
   }
-  if constexpr(std::is_same_v<T, uint32_t>)
+  else if constexpr(std::is_same_v<T, uint32_t>)
   {
     return "H5T_NATIVE_UINT32";
   }
-
-  if constexpr(std::is_same_v<T, int64_t>)
+  else if constexpr(std::is_same_v<T, int64_t>)
   {
     return "H5T_NATIVE_INT64";
   }
-  if constexpr(std::is_same_v<T, uint64_t>)
+  else if constexpr(std::is_same_v<T, uint64_t>)
   {
     return "H5T_NATIVE_UINT64";
   }
-
-  if constexpr(std::is_same_v<T, float>)
+  else if constexpr(std::is_same_v<T, float>)
   {
     return "H5T_NATIVE_FLOAT";
   }
-  if constexpr(std::is_same_v<T, double>)
+  else if constexpr(std::is_same_v<T, double>)
   {
     return "H5T_NATIVE_DOUBLE";
   }
-
-  // if (typeid(value) == typeid(bool)) return "H5T_NATIVE_UINT8";
-
-  std::cout << "Error: HDFTypeForPrimitiveAsStr - Unknown Type: " << typeid(value).name() << std::endl;
-  return "";
+  else
+  {
+    static_assert("HDFTypeForPrimitiveAsStr does not support this type");
+    return "";
+  }
 }
 
 /**

@@ -124,14 +124,12 @@ inline QString StringForHDFType(hid_t type)
 
 /**
  * @brief Returns the HDF Type for a given primitive value.
- * @param value A value to use. Can be anything. Just used to get the type info
- * from
  * @return A QString representing the HDF5 Type
  */
 template <typename T>
-inline QString HDFTypeForPrimitiveAsStr(T value)
+inline QString HDFTypeForPrimitiveAsStr()
 {
-  return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
+  return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr<T>());
 }
 
 /**
