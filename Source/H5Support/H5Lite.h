@@ -2225,6 +2225,49 @@ inline herr_t readVectorAttribute(hid_t locationID, const std::string& objectNam
 }
 
 /**
+ * @brief Reads a scalar attribute value from an object
+ * @param locationID
+ * @param attributeName The name of the Attribute
+ * @param data The preallocated memory for the variable to be stored into
+ * @return Standard HDF5 error condition
+ */
+template <typename T>
+inline herr_t readScalarAttribute(hid_t locationID, const std::string& attributeName, T& data)
+{
+  H5SUPPORT_MUTEX_LOCK()
+
+  herr_t returnError = 0;
+  hid_t dataType = HDFTypeForPrimitive<T>();
+  if(dataType == -1)
+  {
+    return -1;
+  }
+
+  hid_t attributeID = H5Aopen(locationID, attributeName.c_str(), H5P_DEFAULT);
+  if(attributeID >= 0)
+  {
+    herr_t error = H5Aread(attributeID, dataType, &data);
+    if(error < 0)
+    {
+      std::cout << "Error Reading Attribute." << std::endl;
+      returnError = error;
+    }
+    error = H5Aclose(attributeID);
+    if(error < 0)
+    {
+      std::cout << "Error Closing Attribute" << std::endl;
+      returnError = error;
+    }
+  }
+  else
+  {
+    returnError = static_cast<herr_t>(attributeID);
+  }
+
+  return returnError;
+}
+
+/**
  * @brief Reads a scalar attribute value from a dataset
  * @param locationID
  * @param objectName The name of the dataset
