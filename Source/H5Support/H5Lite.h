@@ -458,7 +458,7 @@ inline std::string HDFTypeForPrimitiveAsStr()
   }
   else
   {
-    static_assert("HDFTypeForPrimitiveAsStr does not support this type");
+    static_assert(false, "HDFTypeForPrimitiveAsStr does not support this type");
     return "";
   }
 }
@@ -527,9 +527,13 @@ inline hid_t HDFTypeForPrimitive()
   {
     return H5T_NATIVE_UINT8;
   }
+  else if constexpr(std::is_same_v<T, size_t>)
+  {
+    return H5T_NATIVE_UINT64;
+  }
   else
   {
-    static_assert("HDFTypeForPrimitive does not support this type");
+    static_assert(false, "HDFTypeForPrimitive does not support this type");
     return -1;
   }
 }
