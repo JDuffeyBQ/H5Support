@@ -64,6 +64,9 @@ constexpr size_t k_ChunkBase = 16 * 1024;
 constexpr size_t k_ChunkMin = 8 * 1024;
 constexpr size_t k_ChunkMax = 1024 * 1024;
 
+template <class...>
+inline constexpr std::false_type always_false = {};
+
 /*-------------------------------------------------------------------------
  * Function: find_dataset
  *
@@ -458,7 +461,7 @@ inline std::string HDFTypeForPrimitiveAsStr()
   }
   else
   {
-    static_assert(false, "HDFTypeForPrimitiveAsStr does not support this type");
+    static_assert(always_false<T>, "HDFTypeForPrimitiveAsStr does not support this type");
     return "";
   }
 }
@@ -533,7 +536,7 @@ inline hid_t HDFTypeForPrimitive()
   }
   else
   {
-    static_assert(false, "HDFTypeForPrimitive does not support this type");
+    static_assert(always_false<T>, "HDFTypeForPrimitive does not support this type");
     return -1;
   }
 }
