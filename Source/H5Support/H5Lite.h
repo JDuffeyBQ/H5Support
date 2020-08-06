@@ -64,11 +64,11 @@ namespace detail
 {
 template <class...>
 inline constexpr std::false_type always_false = {};
-} // namespace detail
 
-constexpr size_t k_ChunkBase = 16 * 1024;
-constexpr size_t k_ChunkMin = 8 * 1024;
-constexpr size_t k_ChunkMax = 1024 * 1024;
+inline constexpr size_t k_ChunkBase = 16 * 1024;
+inline constexpr size_t k_ChunkMin = 8 * 1024;
+inline constexpr size_t k_ChunkMax = 1024 * 1024;
+} // namespace detail
 
 /*-------------------------------------------------------------------------
  * Function: find_dataset
@@ -774,8 +774,8 @@ inline std::vector<hsize_t> guessChunkSize(const std::vector<hsize_t>& dims, siz
   hsize_t product = std::accumulate(chunks.cbegin(), chunks.cend(), static_cast<hsize_t>(1), std::multiplies<hsize_t>());
   hsize_t datasetSize = product * typeSize;
   double percentage = std::pow(2.0, std::log10(static_cast<double>(datasetSize) / (1024.0 * 1024.0)));
-  hsize_t targetSize = static_cast<hsize_t>(static_cast<double>(k_ChunkBase) * percentage);
-  targetSize = std::clamp(targetSize, static_cast<hsize_t>(k_ChunkMin), static_cast<hsize_t>(k_ChunkMax));
+  hsize_t targetSize = static_cast<hsize_t>(static_cast<double>(detail::k_ChunkBase) * percentage);
+  targetSize = std::clamp(targetSize, static_cast<hsize_t>(detail::k_ChunkMin), static_cast<hsize_t>(detail::k_ChunkMax));
 
   size_t index = 0;
 
@@ -791,7 +791,7 @@ inline std::vector<hsize_t> guessChunkSize(const std::vector<hsize_t>& dims, siz
       break;
     }
 
-    if(chunkBytes < k_ChunkMax && static_cast<double>(chunkBytes - targetSize) / static_cast<double>(targetSize) < 0.5)
+    if(chunkBytes < detail::k_ChunkMax && static_cast<double>(chunkBytes - targetSize) / static_cast<double>(targetSize) < 0.5)
     {
       foundChunkSize = true;
       break;
