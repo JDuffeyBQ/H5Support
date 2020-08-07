@@ -2410,6 +2410,92 @@ inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectNa
 /**
  * @brief Reads a string attribute from an HDF object
  * @param locationID The Parent object that holds the object to which you want to read an attribute
+ * @param attributeName The name of the Attribute to read
+ * @param data The memory to store the data
+ * @return Standard HDF Error condition
+ */
+inline herr_t readStringAttribute(hid_t locationID, const std::string& attributeName, std::string& data)
+{
+  H5SUPPORT_MUTEX_LOCK()
+ 
+  data.clear();
+
+  hid_t attributeID = H5Aopen(locationID, attributeName.c_str(), H5P_DEFAULT);
+  if(attributeID < 0)
+  {
+    return static_cast<herr_t>(attributeID);
+  }
+
+  hid_t attributeType = H5Aget_type(attributeID);
+  if(attributeType < 0)
+  {
+    H5Aclose(attributeID);
+    return static_cast<herr_t>(attributeType);
+  }
+  
+  if(H5Tis_variable_str(attributeType) > 0)
+  {
+    hid_t space = H5Aget_space(attributeID);
+    int32_t ndims = H5Sget_simple_extent_ndims(space);
+    size_t size = 1;
+    if(ndims > 0)
+    {
+      std::vector<hsize_t> dims(ndims, 0);
+      H5Sget_simple_extent_dims(space, dims.data(), nullptr);
+      size = std::accumulate(dims.cbegin(), dims.cend(), static_cast<size_t>(0));
+    }
+    std::vector<char*> rData(size, nullptr);
+
+    hid_t memtype = H5Tcopy(H5T_C_S1);
+    herr_t error = H5Tset_size(memtype, H5T_VARIABLE);
+    H5T_cset_t characterSet = H5Tget_cset(attributeType);
+    error = H5Tset_cset(memtype, characterSet);
+    error = H5Aread(attributeID, memtype, rData.data());
+    if(error < 0)
+    {
+      H5Sclose(space);
+      H5Tclose(memtype);
+      H5Tclose(attributeType);
+      H5Aclose(attributeID);
+      return error;
+    }
+
+    for(auto ptr : rData)
+    {
+      data.append(ptr);
+    }
+
+    error = H5Dvlen_reclaim(memtype, space, H5P_DEFAULT, rData.data());
+    H5Sclose(space);
+    H5Tclose(memtype);
+  }
+  else
+  {
+    hsize_t size = H5Aget_storage_size(attributeID);
+    std::vector<char> attributeOutput(size);
+    herr_t error = H5Aread(attributeID, attributeType, attributeOutput.data());
+    if(error < 0)
+    {
+      H5Tclose(attributeType);
+      H5Aclose(attributeID);
+      return error;
+    }
+    if(attributeOutput[size - 1] == 0)
+    {
+      size -= 1;
+    }
+    data.append(attributeOutput.data(), size);
+  }
+
+  H5Tclose(attributeType);
+  H5Aclose(attributeID);
+
+  return 0;
+}
+
+/**
+ * @brief Reads a string attribute from an HDF object
+ * @param locationID The Parent object that holds the object to which you want to read an attribute
  * @param objectName The name of the object to which the attribute is to be read
  * @param attributeName The name of the Attribute to read
  * @param data The memory to store the data
