@@ -7,3 +7,4 @@
  * the code is just using hid_t.
  */
 using hid_t = int64_t;
+using herr_t = int32_t;
