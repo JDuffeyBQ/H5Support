@@ -53,7 +53,7 @@ namespace H5Support_NAMESPACE
 class H5ScopedFileSentinel
 {
 public:
-  H5ScopedFileSentinel(hid_t* fileID, bool turnOffErrors)
+  H5ScopedFileSentinel(hid_t fileID, bool turnOffErrors)
   : m_FileID(fileID)
   , m_TurnOffErrors(turnOffErrors)
   {
@@ -71,17 +71,15 @@ public:
     }
     for(auto temp : m_Groups)
     {
-      if(*temp > 0)
+      if(temp > 0)
       {
-        H5Gclose(*temp);
-        *temp = -1;
+        H5Gclose(temp);
       }
     }
 
-    if(*m_FileID > 0)
+    if(m_FileID > 0)
     {
-      H5Utilities::closeFile(*m_FileID);
-      *m_FileID = -1;
+      H5Utilities::closeFile(m_FileID);
     }
   }
 
@@ -90,26 +88,25 @@ public:
   H5ScopedFileSentinel& operator=(const H5ScopedFileSentinel&) = delete; // Copy Assignment Not Implemented
   H5ScopedFileSentinel& operator=(H5ScopedFileSentinel&&) = delete;      // Move Assignment Not Implemented
 
-  void setFileID(hid_t* fileID)
+  void setFileID(hid_t fileID)
   {
     m_FileID = fileID;
   }
 
-  hid_t* getFileID()
+  hid_t getFileID()
   {
     return m_FileID;
   }
 
-  void addGroupId(hid_t* groupID)
-
+  void addGroupId(hid_t groupID)
   {
     m_Groups.push_back(groupID);
   }
 
 private:
-  hid_t* m_FileID = nullptr;
+  hid_t m_FileID = -1;
   bool m_TurnOffErrors = false;
-  std::vector<hid_t*> m_Groups;
+  std::vector<hid_t> m_Groups;
 
   herr_t (*_oldHDF_error_func)(hid_t, void*){};
   void* _oldHDF_error_client_data{};
@@ -122,7 +119,7 @@ private:
 class H5ScopedGroupSentinel
 {
 public:
-  H5ScopedGroupSentinel(hid_t* groupID, bool turnOffErrors)
+  H5ScopedGroupSentinel(hid_t groupID, bool turnOffErrors)
   : m_TurnOffErrors(turnOffErrors)
   {
     m_Groups.push_back(groupID);
@@ -140,10 +137,9 @@ public:
     }
     for(auto temp : m_Groups)
     {
-      if(*temp > 0)
+      if(temp > 0)
       {
-        H5Gclose(*temp);
-        *temp = -1;
+        H5Gclose(temp);
       }
     }
   }
@@ -153,14 +149,14 @@ public:
   H5ScopedGroupSentinel& operator=(const H5ScopedGroupSentinel&) = delete; // Copy Assignment Not Implemented
   H5ScopedGroupSentinel& operator=(H5ScopedGroupSentinel&&) = delete;      // Move Assignment Not Implemented
 
-  void addGroupId(hid_t* groupID)
+  void addGroupId(hid_t groupID)
   {
     m_Groups.push_back(groupID);
   }
 
 private:
   bool m_TurnOffErrors;
-  std::vector<hid_t*> m_Groups;
+  std::vector<hid_t> m_Groups;
 
   herr_t (*_oldHDF_error_func)(hid_t, void*){};
   void* _oldHDF_error_client_data{};
@@ -173,7 +169,7 @@ private:
 class H5ScopedObjectSentinel
 {
 public:
-  H5ScopedObjectSentinel(hid_t* objectID, bool turnOffErrors)
+  H5ScopedObjectSentinel(hid_t objectID, bool turnOffErrors)
   : m_TurnOffErrors(turnOffErrors)
   {
     m_Objects.push_back(objectID);
@@ -192,10 +188,9 @@ public:
     }
     for(auto temp : m_Objects)
     {
-      if(*temp > 0)
+      if(temp > 0)
       {
-        H5Utilities::closeHDF5Object(*temp);
-        *temp = -1;
+        H5Utilities::closeHDF5Object(temp);
       }
     }
   }
@@ -205,14 +200,14 @@ public:
   H5ScopedObjectSentinel& operator=(const H5ScopedObjectSentinel&) = delete; // Copy Assignment Not Implemented
   H5ScopedObjectSentinel& operator=(H5ScopedObjectSentinel&&) = delete;      // Move Assignment Not Implemented
 
-  void addObjectID(hid_t* objectID)
+  void addObjectID(hid_t objectID)
   {
     m_Objects.push_back(objectID);
   }
 
 private:
   bool m_TurnOffErrors;
-  std::vector<hid_t*> m_Objects;
+  std::vector<hid_t> m_Objects;
 
   herr_t (*_oldHDF_error_func)(hid_t, void*){};
   void* _oldHDF_error_client_data{};
@@ -224,21 +219,21 @@ private:
 class H5GroupAutoCloser
 {
 public:
-  H5GroupAutoCloser(hid_t* groupId)
+  H5GroupAutoCloser(hid_t groupId)
   : gid(groupId)
   {
   }
 
   ~H5GroupAutoCloser()
   {
-    if(*gid > 0)
+    if(gid > 0)
     {
-      H5Gclose(*gid);
+      H5Gclose(gid);
     }
   }
 
 private:
-  hid_t* gid = nullptr;
+  hid_t gid = -1;
 };
 
 #if defined(H5Support_NAMESPACE)
