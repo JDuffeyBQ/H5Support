@@ -61,10 +61,10 @@ if(H5Support_INCLUDE_QT_API)
   )
 endif()
 
-target_sources(H5Support
-  INTERFACE
-    ${H5Support_HDRS}
-)
+# target_sources(H5Support
+#   INTERFACE
+#     ${H5Support_HDRS}
+# )
 
 source_group("H5Support" FILES ${H5Support_HDRS})
 
@@ -101,11 +101,89 @@ target_link_libraries(H5Support
     ${H5Support_Link_Libs}
 )
 
-export(TARGETS H5Support
-  NAMESPACE H5Support::
-  FILE ${H5Support_BINARY_DIR}/H5SupportTargets.cmake
+
+# --------------------------------------------------------------------
+# Setup the Exported Targets
+# export(TARGETS H5Support
+#   NAMESPACE H5Support::
+#   FILE ${H5Support_BINARY_DIR}/H5SupportTargets.cmake
+# )
+
+# --------------------------------------------------------------------
+# Setup the install rules for the various platforms
+set(install_dir "bin")
+set(lib_install_dir "lib")
+set(ConfigPackageLocation share/cmake/H5Support)
+
+if(WIN32)
+  set(install_dir ".")
+  set(lib_install_dir ".")
+endif()
+
+
+install(TARGETS ${PROJECT_NAME}
+  COMPONENT Applications
+  EXPORT ${PROJECT_NAME}Targets
+  RUNTIME DESTINATION ${install_dir}
+  LIBRARY DESTINATION ${lib_install_dir}
+  ARCHIVE DESTINATION lib
 )
 
+# --------------------------------------------------------------------
+# Allow the generation and installation of a CMake configuration file
+# which makes using H5Support from another project easier.
+# --------------------------------------------------------------------
+include(CMakePackageConfigHelpers)
+
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}TargetsConfigVersion.cmake"
+  VERSION ${H5Support_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
+
+export(EXPORT ${PROJECT_NAME}Targets
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Targets.cmake"
+  NAMESPACE H5Support::
+)
+
+configure_file(${H5Support_SOURCE_DIR}/cmake/H5SupportConfig.cmake
+  "${CMAKE_CURRENT_BINARY_DIR}/H5SupportConfig.cmake"
+  @ONLY
+)
+
+if(NOT H5Support_SKIP_INSTALL_FILES)
+  install(
+    FILES
+      ${H5Support_HDRS}
+    DESTINATION
+      include/H5Support
+    COMPONENT
+      Devel
+  )
+
+  install(EXPORT ${PROJECT_NAME}Targets
+    FILE
+      ${PROJECT_NAME}Targets.cmake
+    NAMESPACE
+      H5Support::
+    DESTINATION
+      ${ConfigPackageLocation}
+  )
+
+  install(
+    FILES
+      "${CMAKE_CURRENT_BINARY_DIR}/H5SupportConfig.cmake"
+      "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}TargetsConfigVersion.cmake"
+    DESTINATION
+      ${ConfigPackageLocation}
+    COMPONENT
+      Devel
+  )
+endif()
+
+
+# --------------------------------------------------------------------
+# Setup unit testing
 option(H5Support_BUILD_TESTING "Build H5Support tests" ON)
 
 if(H5Support_BUILD_TESTING)
