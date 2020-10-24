@@ -2417,7 +2417,7 @@ inline herr_t readPointerAttribute(hid_t locationID, const std::string& objectNa
 inline herr_t readStringAttribute(hid_t locationID, const std::string& attributeName, std::string& data)
 {
   H5SUPPORT_MUTEX_LOCK()
- 
+
   data.clear();
 
   hid_t attributeID = H5Aopen(locationID, attributeName.c_str(), H5P_DEFAULT);
@@ -2432,7 +2432,7 @@ inline herr_t readStringAttribute(hid_t locationID, const std::string& attribute
     H5Aclose(attributeID);
     return static_cast<herr_t>(attributeType);
   }
-  
+
   if(H5Tis_variable_str(attributeType) > 0)
   {
     hid_t space = H5Aget_space(attributeID);
