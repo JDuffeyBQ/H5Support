@@ -56,6 +56,7 @@
 #else
 #define snprintf sprintf_s
 #endif
+#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #if defined(H5Support_NAMESPACE)
