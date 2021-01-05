@@ -56,7 +56,6 @@
 #else
 #define snprintf sprintf_s
 #endif
-#define _CRT_SECURE_NO_WARNINGS
 #endif
 
 #if defined(H5Support_NAMESPACE)
@@ -178,57 +177,6 @@ public:
     H5SUPPORT_REQUIRE(error >= 0);
 
     error = H5Utilities::closeFile(fileID);
-    H5SUPPORT_REQUIRE(error >= 0);
-  }
-
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  void StressTestCreateGroups()
-  {
-    std::time_t currentDateTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-    std::cout << std::put_time(std::localtime(&currentDateTime), "%F %T") << " Starting StressTestCreateGroups()" << '\n';
-    std::array<char, 64> path;
-    path.fill(0);
-    herr_t error = 0;
-    hid_t groupID = -1;
-
-    /* Create a new file using default properties. */
-    hid_t fileID = H5Fcreate(UnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
-    H5SUPPORT_REQUIRE(fileID > 0);
-
-    for(int i = 0; i < 100; ++i)
-    {
-      currentDateTime = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-      std::cout << std::put_time(std::localtime(&currentDateTime), "%F %T") << " Outer Loop: " << i << '\n';
-      path.fill(0);
-      snprintf(path.data(), path.size(), "/%03d", i);
-      groupID = H5Utilities::createGroup(fileID, path.data());
-      H5SUPPORT_REQUIRE(groupID > 0);
-      error = H5Gclose(groupID);
-      H5SUPPORT_REQUIRE(error >= 0);
-
-      for(int j = 0; j < 100; ++j)
-      {
-        snprintf(path.data(), path.size(), "/%03d/%03d", i, j);
-        groupID = H5Utilities::createGroup(fileID, path.data());
-        H5SUPPORT_REQUIRE(groupID > 0);
-        H5SUPPORT_REQUIRE(groupID > 0);
-        error = H5Gclose(groupID);
-        H5SUPPORT_REQUIRE(error >= 0);
-
-        for(int k = 0; k < 100; ++k)
-        {
-          snprintf(path.data(), path.size(), "/%03d/%03d/%03d", i, j, k);
-          groupID = H5Utilities::createGroup(fileID, path.data());
-          H5SUPPORT_REQUIRE(groupID >= 0);
-          H5SUPPORT_REQUIRE(groupID > 0);
-          error = H5Gclose(groupID);
-          H5SUPPORT_REQUIRE(error >= 0);
-        }
-      }
-    }
-    error = H5Fclose(fileID);
     H5SUPPORT_REQUIRE(error >= 0);
   }
 
