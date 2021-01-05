@@ -89,6 +89,7 @@ public:
   // -----------------------------------------------------------------------------
   void Test()
   {
+    int32_t AttrSize = 0;
     /* Create a new file using default properties. */
     hid_t fileID = H5Fcreate(UnitTest::H5UtilTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     H5SUPPORT_REQUIRE(fileID > 0);
@@ -230,7 +231,4 @@ public:
     H5SUPPORT_REGISTER_TEST(TestOpenSameFile2x())
     H5SUPPORT_REGISTER_TEST(RemoveTestFiles())
   }
-
-private:
-  int32_t AttrSize = 0;
 };
